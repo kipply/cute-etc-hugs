@@ -293,9 +293,9 @@ def flip_BOND(exchange):
     #     if pair[0] > 1000:
     #         sell(exchange, "BOND", pair[0], pair[1])
 def maxBuyVA(name):
-    return 10 - portfolio[name] - offering[name]['BUY'] - offering[name]["PENDING_BUY"]
+    return 9 - portfolio[name] - offering[name]['BUY'] - offering[name]["PENDING_BUY"]
 def maxSellVA(name):
-    return 10 + portfolio[name] - offering[name]['SELL'] - offering[name]["PENDING_SELL"]
+    return 9 + portfolio[name] - offering[name]['SELL'] - offering[name]["PENDING_SELL"]
 def adrArbitrage(exchange):
     try:
       sellEstimate = recent_book["VALBZ"]['sell'][0]
