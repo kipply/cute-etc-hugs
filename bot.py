@@ -135,7 +135,7 @@ def main():
                 flip_BOND(exchange)
             if next_message['symbol'] == "VALBZ" or next_message['symbol'] == "VALE":
                 adrArbitrage(exchange)
-                close position
+                #close position
                 oben = portfolio["VALE"] + portfolio["VALBZ"]
                 if(oben > 0):
                     try:
