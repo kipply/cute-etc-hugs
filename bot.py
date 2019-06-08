@@ -86,11 +86,11 @@ recent_book = {
 offering = {
     u'BOND': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
     u'VALBZ': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
-    u'VALE': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
+    u'VALE': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0, 'CONVERT': 0},
     u'GS': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
     u'MS': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
     u'WFC': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
-    u'XLF': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
+    u'XLF': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0, 'CONVERT': 0},
 }
 trades = []
 
@@ -126,19 +126,30 @@ def main():
             if next_message['symbol'] == "VALBZ":
                 for id, trad in enumerate(trades):
                     if trad['symbol'] == "VALE" and trad['status'] == "ACK":
-                        if trad['dir'] == "BUY" and trad['price'] >= next_message['sell'][0][0]:
+                        if trad['dir'] == "BUY" and trad['price'] >= next_message['sell'][0][0] - 3:
                             cancel(exchange,id)
-                        elif trad['dir'] == "SELL" and trad['price'] <= next_message['buy'][0][0]:
+                        elif trad['dir'] == "SELL" and trad['price'] <= next_message['buy'][0][0] + 3:
                             cancel(exchange,id)
 
         elif next_message['type'] == "ack":
-            trades[next_message['order_id']]['status'] = "ACK"
-            if trades[next_message['order_id']]['symbol'] == "VALE" or trades[next_message['order_id']]['symbol'] == "VALBZ":
-                print(next_message, "ACK")
             offer = trades[next_message['order_id']]
-            offer['status'] = "ACK"
-            offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
-            offering[offer['symbol']][offer['dir']] += offer['size']
+            if(offer['type'] == trade):
+                offer['status'] = "ACK"
+                offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
+                offering[offer['symbol']][offer['dir']] += offer['size']
+            if(offer['type'] == convert):
+                unit = 1
+                if (offer['dir'] == "SELL"):
+                    unit = -1
+
+                portfolio[offer['symbol']] += offer['size'] * unit
+                if(offer['symbol'] == "VALE"):
+                    portfolio["VALBZ"] -= offer['size'] * unit
+                if(offer['symbol'] == "XLF"):
+                    portfolio["BOND"] -= 0.3 * offer['size'] * unit
+                    portfolio["GS"] -= 0.2 * offer['size'] * unit
+                    portfolio["MS"] -= 0.3 * offer['size'] * unit
+                    portfolio["WFC"] -= 0.2 * offer['size'] * unit
             print("ACK:", offer['dir'], offer['price'], offer['size'])
             print("Offering[BOND]:", offering['BOND'])
 
@@ -151,13 +162,15 @@ def main():
                 portfolio[offer['symbol']] -= next_message["size"]
             if symbol == "VALE":
                 #close position
-                oben = portfolio["VALE"]
+                oben = portfolio["VALE"] - portfolio["VALBZ"]
                 if(oben > 0):
                     sell(exchange, "VALBZ", recent_book["VALBZ"]['buy'][0], oben)
-                    convert(exchange, "VALE", 'BUY', oben)
-                if(oben < 0):
-                    sell(exchange, "VALBZ", recent_book["VALBZ"]['sell'][0], oben)
+                    if portfolio["VALE"] > 4
                     convert(exchange, "VALE", 'SELL', oben)
+                if(oben < 0):
+                    sell(exchange, "VALBZ", recent_book["VALBZ"]['sell'][0], -oben)
+                    if portfolio["VALE"] > 4
+                    convert(exchange, "VALE", 'BUY', -oben)
                 portfolio[offer['symbol']] -= next_message["size"]
             offering[offer['symbol']][offer['dir']] -= next_message['size']
             print("Filled")
@@ -293,9 +306,9 @@ def flip_BOND(exchange):
     #     if pair[0] > 1000:
     #         sell(exchange, "BOND", pair[0], pair[1])
 def maxBuyVA(name):
-    return 9 - portfolio[name] - offering[name]['BUY'] - offering[name]["PENDING_BUY"]
+    return 10 - portfolio[name] - offering[name]['BUY'] - offering[name]["PENDING_BUY"]
 def maxSellVA(name):
-    return 9 + portfolio[name] - offering[name]['SELL'] - offering[name]["PENDING_SELL"]
+    return 10 + portfolio[name] - offering[name]['SELL'] - offering[name]["PENDING_SELL"]
 def adrArbitrage(exchange):
 
     try:
@@ -311,14 +324,14 @@ def adrArbitrage(exchange):
     #         print("Attempt SELL BUY CONVERT VALE/VALBZ/VARE")
     #         volume -= min(pair[1], volume)
     try:
-      if recent_book["VALE"]['sell'][0] > sellEstimate[0] + 1:
+      if recent_book["VALE"]['sell'][0] > sellEstimate[0] + 15:
           if(maxSellVA("VALE") > 0):
-              sell(exchange, "VALE", sellEstimate[0] + 1, maxSellVA("VALE"))
+              sell(exchange, "VALE", sellEstimate[0] + 15, maxSellVA("VALE"))
               print("Attempt sell VALE", maxSellVA("VALE"))
     except: print(recent_book["VALE"]['sell'])
-    try: 
+    try:
       buyEstimate = recent_book["VALBZ"]['buy'][0]
-    except: 
+    except:
       return
     # volumeBuy = buyEstimate[1]
     # for pair in recent_book["VALE"]['sell']:
@@ -328,9 +341,9 @@ def adrArbitrage(exchange):
     #         convert(exchange, "VALE", 'SELL', min(pair[1], volumeBuy))
     #         print("Attempt SELL BUY CONVERT VALE/VALBZ/VARE")
     #         volumeBuy -= min(pair[1], volumeBuy)
-    if recent_book["VALE"]['buy'][0] < buyEstimate[0] - 1:
+    if recent_book["VALE"]['buy'][0] < buyEstimate[0] - 7:
         if(maxBuyVA("VALE") > 0):
-            buy(exchange, "VALE", buyEstimate[0] - 1, maxBuyVA("VALE"))
+            buy(exchange, "VALE", buyEstimate[0] - 7, maxBuyVA("VALE"))
             print("Attempt ADR buy VALE")
 
 
