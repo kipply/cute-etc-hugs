@@ -87,18 +87,20 @@ def main():
         extra_log.write(str(next_message))
         if next_message['type'] == "book":
             symbol = next_message['symbol']
-            print(recent_book)
             recent_book[symbol]['buy'] = next_message['buy']
             recent_book[symbol]['sell'] = next_message['sell']
             if next_message['symbol'] == "BOND":
                 flip_BOND(exchange)
         elif next_message['type'] == "ack":
             trades[next_message['order_id']]['status'] = "ACK"
+            print("ACK")
         elif next_message['type'] == "fill":
             order_id = next_message['order_id']
             trades[order_id]['fills'].append(next_message)
+            print(next_message)
         elif next_message['type'] == "out":
             trades[next_message['order_id']]['status'] = "OUT"
+            print("OUT")
         elif next_message['type'] == "reject":
             print(next_message)
         elif next_message['type'] == "error":
@@ -109,7 +111,6 @@ def main():
         #
         # TODO: Handle server dying and restart
         # 
-        print("In while loop")
 
 
 
