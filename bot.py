@@ -58,6 +58,7 @@ recent_book = {
     "XLF": {},
 }
 
+trades = []
 ID = 0
 positions = {
     "BOND": 0,
@@ -69,6 +70,8 @@ positions = {
     "XLF": 0, 
 }
 
+def ID(): 
+    return len(trades)
 
 def main():
     exchange = connect()
@@ -88,7 +91,19 @@ def main():
             recent_book[symbol]['sell'] = next_message['sell']
             if next_message['symbol'] == "BOND":
                 flip_BOND(exchange)
-        if next_message['type'] == "trade":
+        elif next_message['type'] == "ack": 
+            trades[next_message['order_id']]['status'] = "ACK"
+        elif next_message['type'] == "fill": 
+            order_id = next_message['order_id']
+            trades[order_id]['fills'].append(next_message)
+        elif next_message['type'] == "out": 
+            trades[next_message['order_id']]['status'] = "OUT"
+        elif next_message['type'] == "reject": 
+            print(next_message)
+        elif next_message['type'] == "error": 
+            print(next_message)
+        elif next_message['type'] == "trade":
+            # Don't need to do anything
             pass
 
 
