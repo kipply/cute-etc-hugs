@@ -156,7 +156,7 @@ def buy(exchange, name, price, size):
         'size': size
     })
     trades.append({
-        'type' : "trade"
+        'type' : "trade",
         'symbol': name,
         'price': price,
         'size': size,
