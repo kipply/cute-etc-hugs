@@ -49,20 +49,10 @@ def read_from_exchange(exchange):
 
 # ~~~~~============== MAIN LOOP ==============~~~~~
 
-portfolio = {
-    "BOND": 0,
-    "VALBZ": 0,
-    "VALE": 0,
-    "GS": 0,
-    "MS": 0,
-    "WFC": 0,
-    "XLF": 0,
-}
-
 def ID():
     return len(trades)
 
-positions = {
+portfolio = {
     u'BOND': 0,
     u'VALBZ': 0,
     u'VALE': 0,
@@ -166,7 +156,6 @@ def sell(exchange, name, price, size):
     })
 
 def flip_BOND(exchange):
-    print("flipping bond")
     for pair in recent_book['BOND']['sell']:
         if pair[0] < 1000:
             buy(exchange, "BOND", pair[0], pair[1])
