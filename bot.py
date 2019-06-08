@@ -110,12 +110,11 @@ def main():
     # Since many write messages generate marketdata, this will cause an
     # exponential explosion in pending messages. Please, don't do that!
     print("The exchange replied:", hello_from_exchange, file=sys.stderr)
+    for symb in hello_from_exchange['symbols']: 
+      portfolio[symb['symbol']] = symb['position']
 
     while True:
         next_message = read_from_exchange(exchange)
-        print(next_message['symbols'])
-        for symb in next_message['symbols']: 
-          portfolio[symb['symbol']] = symb['position']
 
         # print("\nNext message = ", next_message, "\n")
         extra_log.write(str(next_message))
