@@ -49,7 +49,7 @@ def read_from_exchange(exchange):
 
 # ~~~~~============== MAIN LOOP ==============~~~~~
 
-positions = {
+portfolio = {
     u'BOND': 0,
     u'VALBZ': 0,
     u'VALE': 0,
