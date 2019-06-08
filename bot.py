@@ -115,10 +115,10 @@ def main():
 
     oben = portfolio["VALE"] - portfolio["VALBZ"]
     if(oben > 0):
-        if portfolio["VALE"] > 4:
+        if portfolio["VALE"] > 5:
             convert(exchange, "VALE", 'SELL', portfolio["VALE"])
     if(oben < 0):
-        if portfolio["VALE"] < -4:
+        if portfolio["VALE"] < -5:
             print ("REEEEEEEEE!")
             convert(exchange, "VALE", 'BUY', -portfolio["VALE"])
 
@@ -341,9 +341,9 @@ def adrArbitrage(exchange):
     #         print("Attempt SELL BUY CONVERT VALE/VALBZ/VARE")
     #         volume -= min(pair[1], volume)
     try:
-      if recent_book["VALE"]['sell'][0] > sellEstimate[0] + 7:
+      if recent_book["VALE"]['sell'][0] > sellEstimate[0] + 3:
           if(maxSellVA("VALE") > 0):
-              sell(exchange, "VALE", sellEstimate[0] + 7, maxSellVA("VALE"))
+              sell(exchange, "VALE", sellEstimate[0] + 3, maxSellVA("VALE"))
               print("Attempt sell VALE", maxSellVA("VALE"))
     except: print(recent_book["VALE"]['sell'])
     try:
@@ -359,9 +359,9 @@ def adrArbitrage(exchange):
     #         print("Attempt SELL BUY CONVERT VALE/VALBZ/VARE")
     #         volumeBuy -= min(pair[1], volumeBuy)
     try:
-      if recent_book["VALE"]['buy'][0] < buyEstimate[0] - 7:
+      if recent_book["VALE"]['buy'][0] < buyEstimate[0] - 3:
           if(maxBuyVA("VALE") > 0):
-              buy(exchange, "VALE", buyEstimate[0] - 7, maxBuyVA("VALE"))
+              buy(exchange, "VALE", buyEstimate[0] - 3, maxBuyVA("VALE"))
               print("Attempt ADR buy VALE")
     except:
       return
