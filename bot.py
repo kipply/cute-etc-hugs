@@ -295,7 +295,7 @@ def adrArbitrage(exchange):
     try:
       sellEstimate = recent_book["VALBZ"]['sell'][0]
     except:
-    #   return
+      return
     # volume = sellEstimate[1]
     # for pair in recent_book["VALE"]['buy']:
     #     if pair[0] > sellEstimate[0] and volume > 0:
