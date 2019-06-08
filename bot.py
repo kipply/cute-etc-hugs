@@ -283,8 +283,9 @@ def etf_arbitrage(exchange):
 
   print(xlf_buy_est, xlf_sell_estimate)
 
+  if xlf_buy_est > xlf_sell_estimate * 10: 
+    buy(exchange, "XLF", round(xlf_sell_estimate), volume)
   if 10 * xlf_buy_est - 100 > xlf_sell_estimate * 10: 
-    buy(exchange, "XLF", volume, 10)
     convert(exchange, "XLF", "SELL", 10)
     sell(exchange, "BOND", round(est_bond), 3)
     sell(exchange, "GS", round(est_gs), 2)
