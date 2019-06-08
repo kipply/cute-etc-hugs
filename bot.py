@@ -127,9 +127,9 @@ def main():
                 for id, trad in enumerate(trades):
                     if trad['symbol'] == "VALE" and trad['status'] == "ACK":
                         if trad['dir'] == "BUY" and trad['price'] >= next_message['sell'][0][0]:
-                            cancel(id)
+                            cancel(exchange,id)
                         elif trad['dir'] == "SELL" and trad['price'] <= next_message['buy'][0][0]:
-                            cancel(id)
+                            cancel(exchange,id)
 
         elif next_message['type'] == "ack":
             trades[next_message['order_id']]['status'] = "ACK"
