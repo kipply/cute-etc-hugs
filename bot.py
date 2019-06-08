@@ -16,7 +16,7 @@ import json
 team_name = "TEAMLOWRY"
 # This variable dictates whether or not the bot is connecting to the prod
 # or test exchange. Be careful with this switch!
-test_mode = True
+test_mode = bool(open('env').read())
 
 # This setting changes which test exchange is connected to.
 # 0 is prod-like
@@ -112,6 +112,8 @@ def main():
         elif next_message['type'] == "trade":
             # Don't need to do anything
             pass
+        elif next_message['type'] == "close":
+            print("RESET!!!!!!!!")
         #
         # TODO: Handle server dying and restart
 
