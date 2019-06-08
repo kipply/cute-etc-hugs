@@ -138,11 +138,11 @@ def main():
 
         elif next_message['type'] == "ack":
             offer = trades[next_message['order_id']]
-            if(offer['type'] == trade):
+            if(offer['type'] == "trade"):
                 offer['status'] = "ACK"
                 offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
                 offering[offer['symbol']][offer['dir']] += offer['size']
-            if(offer['type'] == convert):
+            if(offer['type'] == "convert"):
                 unit = 1
                 if (offer['dir'] == "SELL"):
                     unit = -1
