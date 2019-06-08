@@ -150,6 +150,8 @@ def main():
             offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
             print("Rejected:", offer['dir'], offer['price'], offer['size'], "Reason:", next_message['error'])
             # print("AFTER Reject: Offering:", offering['BOND'])
+            if next_message['error'] == "ADD_RATE":
+                break
         elif next_message['type'] == "error":
             print("Trade error!")
         elif next_message['type'] == "trade":
