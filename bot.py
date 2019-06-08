@@ -110,9 +110,12 @@ def main():
     # Since many write messages generate marketdata, this will cause an
     # exponential explosion in pending messages. Please, don't do that!
     print("The exchange replied:", hello_from_exchange, file=sys.stderr)
+    for symb in hello_from_exchange['symbols']:
+      portfolio[symb['symbol']] = symb['position']
 
     while True:
         next_message = read_from_exchange(exchange)
+
         # print("\nNext message = ", next_message, "\n")
         extra_log.write(str(next_message))
         if next_message['type'] == "book":
@@ -126,10 +129,12 @@ def main():
             if next_message['symbol'] == "VALBZ":
                 for id, trad in enumerate(trades):
                     if trad['symbol'] == "VALE" and trad['status'] == "ACK":
+                      try:
                         if trad['dir'] == "BUY" and trad['price'] >= next_message['sell'][0][0] - 3:
                             cancel(exchange,id)
                         elif trad['dir'] == "SELL" and trad['price'] <= next_message['buy'][0][0] + 3:
                             cancel(exchange,id)
+                      except: pass
 
         elif next_message['type'] == "ack":
             offer = trades[next_message['order_id']]
@@ -341,11 +346,13 @@ def adrArbitrage(exchange):
     #         convert(exchange, "VALE", 'SELL', min(pair[1], volumeBuy))
     #         print("Attempt SELL BUY CONVERT VALE/VALBZ/VARE")
     #         volumeBuy -= min(pair[1], volumeBuy)
-    if recent_book["VALE"]['buy'][0] < buyEstimate[0] - 7:
-        if(maxBuyVA("VALE") > 0):
-            buy(exchange, "VALE", buyEstimate[0] - 7, maxBuyVA("VALE"))
-            print("Attempt ADR buy VALE")
-
+    try:
+      if recent_book["VALE"]['buy'][0] < buyEstimate[0] - 7:
+          if(maxBuyVA("VALE") > 0):
+              buy(exchange, "VALE", buyEstimate[0] - 7, maxBuyVA("VALE"))
+              print("Attempt ADR buy VALE")
+    except:
+      return
 
 
 #def adrPenny(exchange):
