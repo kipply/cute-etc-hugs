@@ -117,9 +117,9 @@ def main():
             offer = trades[next_message['order_id']]
             offer['fills'].append(next_message)
             if next_message['dir'] == "BUY":
-                portfolio[symbol] += next_message["size"]
+                portfolio[offer['symbol']] += next_message["size"]
             elif next_message['dir'] == "SELL":
-                portfolio[symbol] -= next_message["size"]
+                portfolio[offer['symbol']] -= next_message["size"]
             offering[offer['symbol']][offer['dir']] -= next_message['size']
             print("Filled")
             print(next_message)
