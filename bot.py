@@ -136,12 +136,16 @@ def main():
                         sell(exchange, "VALBZ", recent_book["VALBZ"]['buy'][0][0], oben)
                         if portfolio["VALE"] > 8:
                             convert(exchange, "VALE", 'SELL', 12)
+                    except:
+                        pass
                 if(oben < 0):
                     try:
                         buy(exchange, "VALBZ", recent_book["VALBZ"]['sell'][0][0], -oben)
                         if portfolio["VALE"] < -8:
                             print ("REEEEEEEEE!")
                             convert(exchange, "VALE", 'BUY', 12)
+                    except:
+                        pass
             if next_message['symbol'] == "VALBZ":
                 for id, trad in enumerate(trades):
                     if trad['symbol'] == "VALE" and trad['status'] == "ACK":
