@@ -129,10 +129,12 @@ def main():
             if next_message['symbol'] == "VALBZ":
                 for id, trad in enumerate(trades):
                     if trad['symbol'] == "VALE" and trad['status'] == "ACK":
+                      try: 
                         if trad['dir'] == "BUY" and trad['price'] >= next_message['sell'][0][0]:
                             cancel(exchange,id)
                         elif trad['dir'] == "SELL" and trad['price'] <= next_message['buy'][0][0]:
                             cancel(exchange,id)
+                      except: pass
 
         elif next_message['type'] == "ack":
             trades[next_message['order_id']]['status'] = "ACK"
