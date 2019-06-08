@@ -184,7 +184,7 @@ def sell(exchange, name, price, size):
         'dir': 'SELL',
         'fills': []
     })
-def convert(exchange, name, dir, size)：
+def convert(exchange, name, dir, size):
     write_to_exchange(exchange, {
         'type': 'convert',
         'order_id' : ID(),
