@@ -128,7 +128,7 @@ def main():
             if trades[next_message['order_id']]['symbol'] == "VALE" or trades[next_message['order_id']]['symbol'] == "VALBZ": 
               print(next_message, "OUT") 
         elif next_message['type'] == "reject":
-            print(recent_book)
+            print(trades[next_message['order_id']])
             print(next_message)
         elif next_message['type'] == "error":
             print(next_message)
@@ -212,7 +212,6 @@ def adrArbitrage(exchange):
     try: 
       if recent_book["VALE"]['sell'][0] > sellEstimate[0]:
           sell(exchange, "VALE", sellEstimate[0], 2)
-          print(sellEstimate[0])
           print("Attempt sell VALE")
     except: print(recent_book["VALE"]['sell'])
 
