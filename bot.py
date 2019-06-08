@@ -113,6 +113,7 @@ def main():
 
     while True:
         next_message = read_from_exchange(exchange)
+        print(next_message['symbols'])
         for symb in next_message['symbols']: 
           portfolio[symb['symbol']] = symb['position']
 
