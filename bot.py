@@ -113,7 +113,7 @@ def main():
     print("The exchange replied:", hello_from_exchange, file=sys.stderr)
     for pair in hello_from_exchange['symbols']:
         portfolio[pair['symbol']] = pair['position']
-		
+
     while True:
         next_message = read_from_exchange(exchange)
         extra_log.write(str(next_message))
@@ -123,7 +123,7 @@ def main():
             recent_book[symbol]['sell'] = next_message['sell']
             # if next_message['symbol'] == "BOND":
                 # flip_BOND(exchange)
-            etf_arbitrage(exchange)
+            # etf_arbitrage(exchange)
         elif next_message['type'] == "ack":
             # print("BEFORE ACK: Offering[BOND]:", offering['BOND'])
             offer = trades[next_message['order_id']]
