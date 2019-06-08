@@ -178,14 +178,14 @@ def main():
         #
         # TODO: Handle server dying and restart
 
-        if offering['BOND']['SELL'] + offering['BOND']['PENDING_SELL'] < 99 + portfolio['BOND']:
+        if offering['BOND']['SELL'] + offering['BOND']['PENDING_SELL'] < 20 + portfolio['BOND']:
             print("(FS) Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
-            sell(exchange, "BOND", 1001, 99 + portfolio['BOND'] -
+            sell(exchange, "BOND", 1001, 20 + portfolio['BOND'] -
                  offering['BOND']['SELL'] - offering['BOND']['PENDING_SELL'])
             print("AFTER FS Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
-        if offering['BOND']['BUY'] + offering['BOND']['PENDING_BUY'] < 99 - portfolio['BOND']:
+        if offering['BOND']['BUY'] + offering['BOND']['PENDING_BUY'] < 20 - portfolio['BOND']:
             print("(FB) Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
-            buy(exchange, "BOND", 999, 99 - portfolio['BOND'] -
+            buy(exchange, "BOND", 999, 20 - portfolio['BOND'] -
                 offering['BOND']['BUY'] - offering['BOND']['PENDING_BUY'])
             print("AFTER FB Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
 
