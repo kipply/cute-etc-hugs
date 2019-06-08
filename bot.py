@@ -147,6 +147,7 @@ def main():
             offer = trades[next_message['order_id']]
             offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
             print("Rejected:", offer['dir'], offer['price'], offer['size'], "Reason:", next_message['error'])
+            print("AFTER Reject: Offering:", offering['BOND'])
         elif next_message['type'] == "error":
             print("Trade error!")
         elif next_message['type'] == "trade":
@@ -181,12 +182,12 @@ def main():
             print("(FS) Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
             sell(exchange, "BOND", 1001, 99 + portfolio['BOND'] -
                  offering['BOND']['SELL'] - offering['BOND']['PENDING_SELL'])
-            print("AFTER Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
+            print("AFTER FS Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
         if offering['BOND']['BUY'] + offering['BOND']['PENDING_BUY'] < 99 - portfolio['BOND']:
-            print("(FS) Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
+            print("(FB) Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
             buy(exchange, "BOND", 999, 99 - portfolio['BOND'] -
                 offering['BOND']['BUY'] - offering['BOND']['PENDING_BUY'])
-            print("AFTER Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
+            print("AFTER FB Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
 
         # TODO: Handle server dying and restart
 
