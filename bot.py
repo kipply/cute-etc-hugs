@@ -111,6 +111,7 @@ def main():
             recent_book[symbol]['sell'] = next_message['sell']
             # if next_message['symbol'] == "BOND":
                 # flip_BOND(exchange)
+            etf_arbitrage(exchange)
         elif next_message['type'] == "ack":
             trades[next_message['order_id']]['status'] = "ACK"
             print("ACK")
