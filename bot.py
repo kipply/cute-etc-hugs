@@ -97,7 +97,7 @@ def main():
 
     while True:
         next_message = read_from_exchange(exchange)
-        print("Next message = ", next_message)
+        print("\n\nNext message = ", next_message, "\n\n")
         extra_log.write(str(next_message))
         if next_message['type'] == "book":
             symbol = next_message['symbol']
@@ -165,7 +165,7 @@ def buy(exchange, name, price, size):
         'dir': 'BUY',
         'fills': []
     })
-    offering[name]['BUY']['PENDING_BUY'] += price
+    offering[name]['PENDING_BUY'] += price
 
 
 def sell(exchange, name, price, size):
@@ -186,7 +186,7 @@ def sell(exchange, name, price, size):
         'dir': 'SELL',
         'fills': []
     })
-    offering[name]['SELL']['PENDING_SELL'] += size
+    offering[name]['PENDING_SELL'] += size
 
 
 def flip_BOND(exchange):
