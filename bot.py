@@ -30,6 +30,7 @@ exchange_hostname = "test-exch-" + team_name if test_mode else prod_exchange_hos
 
 extra_log = open('extra_logs.txt', 'w+')
 
+
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -41,6 +42,8 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 # ~~~~~============== NETWORKING CODE ==============~~~~~
+
+
 def connect():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -62,6 +65,7 @@ def read_from_exchange(exchange):
 def ID():
     return len(trades)
 
+
 portfolio = {
     u'BOND': 0,
     u'VALBZ': 0,
@@ -81,6 +85,7 @@ recent_book = {
     u'XLF': {},
 }
 trades = []
+
 
 def main():
     global portfolio
@@ -153,8 +158,6 @@ def main():
         # TODO: Handle server dying and restart
 
 
-
-
 def buy(exchange, name, price, size):
     write_to_exchange(exchange, {
         'type': 'add',
@@ -192,6 +195,7 @@ def sell(exchange, name, price, size):
         'fills': []
     })
 
+
 def flip_BOND(exchange):
     for pair in recent_book['BOND']['sell']:
         if pair[0] < 1000:
@@ -221,42 +225,54 @@ def convert(exchange, name, dir, size):
                 'fills': []
     })
 
-
 def etf_arbitrage(exchange):
-  xlf_sell_estimate = 0 
-  temp = 0 
-  for sell in recent_book['XLF']['sell']: 
-    xlf_sell_estimate += sell[0] * sell[1] 
-    temp += sell[1] 
-  xlf_sell_estimate /= float(temp) 
+	xlf_sell_estimate = 0
+	temp = count = 0
+	for sell in recent_book['XLF']['sell']:
+		xlf_sell_estimate += sell[0] * sell[1]
+		temp += sell[1]
+		count += 1
+		if count >= 3:
+			break
+	xlf_sell_estimate /= float(temp)
 
-  est_bond = 0 
-  temp = 0 
-  for sell in recent_book['BOND']['sell']: 
-    est_bond += sell[0] * sell[1] 
-    temp += sell[1] 
-  est_bond /= float(temp)
-  est_gs = 0 
-  temp = 0 
-  for sell in recent_book['GS']['sell']: 
-    est_gs += sell[0] * sell[1] 
-    temp += sell[1] 
-  est_gs /= float(temp)
-  est_ms = 0 
-  temp = 0 
-  for sell in recent_book['MS']['sell']: 
-    est_ms += sell[0] * sell[1] 
-    temp += sell[1] 
-  est_ms /= float(temp)
-  est_wfc = 0 
-  temp = 0 
-  for sell in recent_book['WCF']['sell']: 
-    est_wfc += sell[0] * sell[1] 
-    temp += sell[1] 
-  est_wfc /= float(temp)
+	est_bond = temp = count = 0
+	for sell in recent_book['BOND']['sell']:
+		est_bond += sell[0] * sell[1]
+		temp += sell[1]
+		count += 1
+		if count >= 3:
+			break
+	est_bond /= float(temp)
 
-  xlf_buy_est = (2 * est_wfc + 3 * est_ms + 2 * est_gs + 3 * est_bond) / 10.0
+	est_gs = temp = count = 0
+	for sell in recent_book['GS']['sell']:
+		est_gs += sell[0] * sell[1]
+		temp += sell[1]
+		count += 1
+		if count >= 3:
+			break
+	est_gs /= float(temp)
 
+	est_ms = temp = count = 0
+	for sell in recent_book['MS']['sell']:
+		est_ms += sell[0] * sell[1]
+		temp += sell[1]
+		count += 1
+		if count >= 3:
+			break
+	est_ms /= float(temp)
+
+	est_wfc = temp = count = 0
+	for sell in recent_book['WCF']['sell']:
+		est_wfc += sell[0] * sell[1]
+		temp += sell[1]
+		count += 1
+		if count >= 3:
+			break
+	est_wfc /= float(temp)
+
+	xlf_buy_est = (2 * est_wfc + 3 * est_ms + 2 * est_gs + 3 * est_bond) / 10.0
 
   if 10 * xlf_buy_est - 100 > xlf_sell_estimate * 10: 
     buy(exchange, "XLF", int(round(xlf_sell_estimate)), 10)
@@ -266,5 +282,7 @@ def etf_arbitrage(exchange):
     sell(exchange, "MS", round(est_ms), 30)
     sell(exchange, "WFC", round(est_wfc), 30)
     print("MADE ETF TRADE FOR 10")
+
+
 if __name__ == "__main__":
     main()
