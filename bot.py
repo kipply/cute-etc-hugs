@@ -62,9 +62,9 @@ def read_from_exchange(exchange):
 # ~~~~~============== MAIN LOOP ==============~~~~~
 
 def maxBuyVA(name):
-return 10 - portfolio[name] - offering[name]['BUY'] - offering[name]["PENDING_BUY"]
+    return 10 - portfolio[name] - offering[name]['BUY'] - offering[name]["PENDING_BUY"]
 def maxSellVA(name):
-return 10 + portfolio[name] - offering[name]['SELL'] - offering[name]["PENDING_SELL"]
+    return 10 + portfolio[name] - offering[name]['SELL'] - offering[name]["PENDING_SELL"]
 
 def ID():
     return len(trades)
