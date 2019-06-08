@@ -97,7 +97,7 @@ def main():
 
     while True:
         next_message = read_from_exchange(exchange)
-        print("\n\nNext message = ", next_message, "\n\n")
+        # print("\n\nNext message = ", next_message, "\n\n")
         extra_log.write(str(next_message))
         if next_message['type'] == "book":
             symbol = next_message['symbol']
