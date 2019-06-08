@@ -94,7 +94,7 @@ def main():
             if next_message['symbol'] == "BOND":
                 flip_BOND(exchange)
             if next_message['symbol'] == "VALBZ" or next_message['symbol'] == "VALE":
-                adrArbitrage(exchange, recent_book)
+                adrArbitrage(exchange)
             if next_message['symbol'] == "VALBZ":
                 for id, trad in enumerate(trades):
                     if trad['symbol'] == "VALE" and trad['status'] == "ACK":
