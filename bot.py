@@ -113,6 +113,26 @@ def main():
             # Don't need to do anything
             pass
         elif next_message['type'] == "close":
+            # reset everything
+            portfolio = {
+                u'BOND': 0,
+                u'VALBZ': 0,
+                u'VALE': 0,
+                u'GS': 0,
+                u'MS': 0,
+                u'WFC': 0,
+                u'XLF': 0,
+            }
+            recent_book = {
+                u'BOND': {},
+                u'VALBZ': {},
+                u'VALE': {},
+                u'GS': {},
+                u'MS': {},
+                u'WFC': {},
+                u'XLF': {},
+            }
+            trades = []
             print("RESET!!!!!!!!")
         #
         # TODO: Handle server dying and restart
