@@ -84,7 +84,7 @@ def main():
 
 def flip_BOND(exchange):
     # total = 0
-    for i in len(recent_book['BOND']['sell']):
+    for i in range(len(recent_book['BOND']['sell'])):
         if recent_book['BOND']['sell'][i][0] < 1000:
             # total += recent_book['BOND']['sell'][i][1]
             ID += 1
