@@ -62,28 +62,29 @@ portfolio = {
 def ID():
     return len(trades)
 
-positions = {
-    u'BOND': 0,
-    u'VALBZ': 0,
-    u'VALE': 0,
-    u'GS': 0,
-    u'MS': 0,
-    u'WFC': 0,
-    u'XLF': 0,
-}
-recent_book = {
-    u'BOND': {},
-    u'VALBZ': {},
-    u'VALE': {},
-    u'GS': {},
-    u'MS': {},
-    u'WFC': {},
-    u'XLF': {},
-}
-trades = []
-
 def main():
     exchange = connect()
+
+    positions = {
+        u'BOND': 0,
+        u'VALBZ': 0,
+        u'VALE': 0,
+        u'GS': 0,
+        u'MS': 0,
+        u'WFC': 0,
+        u'XLF': 0,
+    }
+    recent_book = {
+        u'BOND': {},
+        u'VALBZ': {},
+        u'VALE': {},
+        u'GS': {},
+        u'MS': {},
+        u'WFC': {},
+        u'XLF': {},
+    }
+    trades = []
+    
     write_to_exchange(exchange, {"type": "hello", "team": team_name.upper()})
     hello_from_exchange = read_from_exchange(exchange)
     # A common mistake people make is to call write_to_exchange() > 1
