@@ -105,6 +105,7 @@ def main():
             offer['status'] = "ACK"
             offering[offer['symbol']][offer['dir']] += offer['size']
             print("ACK:", offer['dir'], offer['price'], offer['size'])
+            print("Offering[BOND] = " + offering['BOND']['BUY'], offering['BOND']['SELL'])
 
         elif next_message['type'] == "fill":
             offer = trades[next_message['order_id']]
