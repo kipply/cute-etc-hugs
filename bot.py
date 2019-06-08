@@ -136,10 +136,10 @@ def main():
             pass
 
         if offering['BOND']['SELL'] < 100 + portfolio['BOND']:
-            print(portfolio['BOND'], offering['BOND']['SELL'])
+            print("Flood sell", portfolio['BOND'], offering['BOND']['SELL'])
             sell(exchange, "BOND", 1001, 100 + portfolio['BOND'] - offering['BOND']['SELL'])
         if offering['BOND']['BUY'] < 100 - portfolio['BOND']:
-            print(portfolio['BOND'], offering['BOND']['SELL'])
+            print("Flood buy", portfolio['BOND'], offering['BOND']['BUY'])
             buy(exchange, "BOND", 999, 100 - portfolio['BOND'] - offering['BOND']['SELL'])
         
         # TODO: Handle server dying and restart
