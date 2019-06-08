@@ -231,45 +231,45 @@ def etf_arbitrage(exchange):
   xlf_sell_estimate = 0
   temp = count = 0
   try: 
-    for sell in recent_book['XLF']['sell']:
-      xlf_sell_estimate += sell[0] * sell[1]
-      temp += sell[1]
+    for share in recent_book['XLF']['sell']:
+      xlf_sell_estimate += share[0] * share[1]
+      temp += share[1]
       count += 1
       if count >= 3:
         break
     xlf_sell_estimate /= float(temp)
 
     est_bond = temp = count = 0
-    for sell in recent_book['BOND']['sell']:
-      est_bond += sell[0] * sell[1]
-      temp += sell[1]
+    for share in recent_book['BOND']['sell']:
+      est_bond += share[0] * share[1]
+      temp += share[1]
       count += 1
       if count >= 3:
         break
     est_bond /= float(temp)
 
     est_gs = temp = count = 0
-    for sell in recent_book['GS']['sell']:
-      est_gs += sell[0] * sell[1]
-      temp += sell[1]
+    for share in recent_book['GS']['sell']:
+      est_gs += share[0] * share[1]
+      temp += share[1]
       count += 1
       if count >= 3:
         break
     est_gs /= float(temp)
 
     est_ms = temp = count = 0
-    for sell in recent_book['MS']['sell']:
-      est_ms += sell[0] * sell[1]
-      temp += sell[1]
+    for share in recent_book['MS']['sell']:
+      est_ms += share[0] * share[1]
+      temp += share[1]
       count += 1
       if count >= 3:
         break
     est_ms /= float(temp)
 
     est_wfc = temp = count = 0
-    for sell in recent_book['WFC']['sell']:
-      est_wfc += sell[0] * sell[1]
-      temp += sell[1]
+    for share in recent_book['WFC']['sell']:
+      est_wfc += share[0] * share[1]
+      temp += share[1]
       count += 1
       if count >= 3:
         break
