@@ -120,6 +120,7 @@ def main():
             if next_message['symbol'] == "BOND":
                 flip_BOND(exchange)
         elif next_message['type'] == "ack":
+            print("BEFORE ACK: Offering[BOND]:", offering['BOND'])
             offer = trades[next_message['order_id']]
             offer['status'] = "ACK"
             offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
@@ -180,10 +181,12 @@ def main():
             print("(FS) Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
             sell(exchange, "BOND", 1001, 99 + portfolio['BOND'] -
                  offering['BOND']['SELL'] - offering['BOND']['PENDING_SELL'])
+            print("AFTER Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
         if offering['BOND']['BUY'] + offering['BOND']['PENDING_BUY'] < 99 - portfolio['BOND']:
             print("(FS) Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
             buy(exchange, "BOND", 999, 99 - portfolio['BOND'] -
                 offering['BOND']['BUY'] - offering['BOND']['PENDING_BUY'])
+            print("AFTER Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
 
         # TODO: Handle server dying and restart
 
