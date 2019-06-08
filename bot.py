@@ -142,7 +142,12 @@ def main():
                         if(maxSellVA("VALBZ") > 0):
                             sell(exchange, "VALBZ", recent_book["VALBZ"]['buy'][0][0], min(maxSellVA('VALBZ'),oben))
                         if portfolio["VALE"] > 8:
-                            convert(exchange, "VALE", 'SELL', 12)
+                            for c, trad in enumerate(trades):
+                                if trad['symbol'] == 'VALBZ' and trad['status'] == "ACK":
+                                    cancel (exchange, id)
+                                if trad['symbol'] == 'VALE' and trad['status'] == "ACK":
+                                    cancel (exchange, id)
+                        convert(exchange, "VALE", 'SELL', 12)
                     except:
                         pass
                 if(oben < 0):
@@ -151,6 +156,11 @@ def main():
                             buy(exchange, "VALBZ", recent_book["VALBZ"]['sell'][0][0], min(maxBuyVA('VALBZ'),-oben))
                         if portfolio["VALE"] < -8:
                             print ("REEEEEEEEE!")
+                            for c, trad in enumerate(trades):
+                                if trad['symbol'] == 'VALBZ' and trad['status'] == "ACK":
+                                    cancel (exchange, id)
+                                if trad['symbol'] == 'VALE' and trad['status'] == "ACK":
+                                    cancel (exchange, id)                               
                             convert(exchange, "VALE", 'BUY', 12)
                     except:
                         pass
