@@ -109,8 +109,8 @@ def main():
             symbol = next_message['symbol']
             recent_book[symbol]['buy'] = next_message['buy']
             recent_book[symbol]['sell'] = next_message['sell']
-            #if next_message['symbol'] == "BOND":
-                #flip_BOND(exchange)
+            # if next_message['symbol'] == "BOND":
+                # flip_BOND(exchange)
         elif next_message['type'] == "ack":
             trades[next_message['order_id']]['status'] = "ACK"
             print("ACK")
@@ -205,15 +205,14 @@ def flip_BOND(exchange):
             sell(exchange, "BOND", pair[0], pair[1])
 
 
-
 def convert(exchange, name, dir, size):
     print("trying_to_convert", name, dir, size)
     write_to_exchange(exchange, {
         'type': 'convert',
-        'order_id' : ID(),
-        'symbol' : name,
-        'dir' : dir,
-        'size' : size
+        'order_id': ID(),
+        'symbol': name,
+        'dir': dir,
+        'size': size
     })
     trades.append({
         'type': 'convert',
@@ -224,6 +223,7 @@ def convert(exchange, name, dir, size):
                 'dir': 'CONVERT',
                 'fills': []
     })
+
 
 def etf_arbitrage(exchange):
 	xlf_sell_estimate = 0
@@ -272,16 +272,17 @@ def etf_arbitrage(exchange):
 			break
 	est_wfc /= float(temp)
 
-  xlf_buy_est = (2 * est_wfc + 3 * est_ms + 2 * est_gs + 3 * est_bond) / 10.0
+	xlf_buy_est = (2 * est_wfc + 3 * est_ms + 2 * est_gs + 3 * est_bond) / 10.0
 
-  if 10 * xlf_buy_est - 100 > xlf_sell_estimate * 10: 
-    buy(exchange, "XLF", int(round(xlf_sell_estimate)), 10)
-    convert(exchange, "XLF", "SELL", 10)
-    sell(exchange, "BOND", round(est_bond), 30)
-    sell(exchange, "GS", round(est_gs), 20)
-    sell(exchange, "MS", round(est_ms), 30)
-    sell(exchange, "WFC", round(est_wfc), 30)
-    print("MADE ETF TRADE FOR 10")
+	if 10 * xlf_buy_est - 100 > xlf_sell_estimate * 10: 
+		buy(exchange, "XLF", int(round(xlf_sell_estimate)), 10)
+		convert(exchange, "XLF", "SELL", 10)
+		sell(exchange, "BOND", round(est_bond), 30)
+		sell(exchange, "GS", round(est_gs), 20)
+		sell(exchange, "MS", round(est_ms), 30)
+		sell(exchange, "WFC", round(est_wfc), 30)
+		print("MADE ETF TRADE FOR 10")
+
 
 
 if __name__ == "__main__":
