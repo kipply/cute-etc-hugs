@@ -167,7 +167,7 @@ def buy(exchange, name, price, size):
         'dir': 'BUY',
         'fills': []
     })
-    offering[name]['PENDING_BUY'] += price
+    offering[name]['PENDING_BUY'] += size
 
 
 def sell(exchange, name, price, size):
