@@ -129,7 +129,6 @@ def main():
         elif next_message['type'] == "reject":
             offer = trades[next_message['order_id']]
             print("Rejected:", offer['dir'], offer['price'], offer['size'])
-            print(portfolio['BOND'], offering['BOND']['SELL'])
         elif next_message['type'] == "error":
             print("Trade error!")
         elif next_message['type'] == "trade":
