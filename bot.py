@@ -146,6 +146,7 @@ def main():
 
 
 def buy(exchange, name, price, size):
+    print("trying to buy", name, price, size)
     write_to_exchange(exchange, {
         'type': 'add',
         'order_id': ID(),
@@ -165,6 +166,7 @@ def buy(exchange, name, price, size):
 
 
 def sell(exchange, name, price, size):
+    print("trying to sell", name, price, size)
     write_to_exchange(exchange, {
         'type': 'add',
         'order_id': ID(),
