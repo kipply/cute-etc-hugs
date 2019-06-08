@@ -73,7 +73,6 @@ recent_book = {
 trades = []
 
 def main():
-    reset_variables() 
     exchange = connect()
     write_to_exchange(exchange, {"type": "hello", "team": team_name.upper()})
     hello_from_exchange = read_from_exchange(exchange)
