@@ -179,13 +179,13 @@ def main():
                 oben = portfolio["VALE"] + portfolio["VALBZ"]
                 if(oben > 0):
                     sell(exchange, "VALBZ", recent_book["VALBZ"]['buy'][0], oben)
-                    if portfolio["VALE"] > 4:
-                        convert(exchange, "VALE", 'SELL', portfolio["VALE"])
+                    if portfolio["VALE"] > 8:
+                        convert(exchange, "VALE", 'SELL', 12)
                 if(oben < 0):
                     buy(exchange, "VALBZ", recent_book["VALBZ"]['sell'][0], -oben)
-                    if portfolio["VALE"] < -4:
+                    if portfolio["VALE"] < -8:
                         print ("REEEEEEEEE!")
-                        convert(exchange, "VALE", 'BUY', -portfolio["VALE"])
+                        convert(exchange, "VALE", 'BUY', 12)
             portfolio[offer['symbol']] -= next_message["size"]
             offering[offer['symbol']][offer['dir']] -= next_message['size']
             print("Filled")
@@ -343,9 +343,9 @@ def adrArbitrage(exchange):
     #         print("Attempt SELL BUY CONVERT VALE/VALBZ/VARE")
     #         volume -= min(pair[1], volume)
     try:
-        if recent_book["VALE"]['sell'][0] > sellEstimate[0] + 2:
+        if recent_book["VALE"]['sell'][0] > sellEstimate[0] + 1:
             if(maxSellVA("VALE") > 0):
-              sell(exchange, "VALE", sellEstimate[0] + 2, min(maxSellVA("VALE"), sellEstimate[1]))
+              sell(exchange, "VALE", sellEstimate[0] + 1, min(maxSellVA("VALE"), sellEstimate[1]))
               print("Attempt sell VALE", min(maxSellVA("VALE"), sellEstimate[1]))
             # elif(maxSellVA("VALE") == 0):
             #     for c, trad in enumerate(trades):
@@ -368,16 +368,16 @@ def adrArbitrage(exchange):
     #         volumeBuy -= min(pair[1], volumeBuy)
     try:
       print("sssssssssssssssssssssssssssssssssssssssssRRRRRRRRRRRRRRRRRRRRRRRRREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE11123")
-      if recent_book["VALE"]['buy'][0] < buyEstimate[0] - 2:
+      if recent_book["VALE"]['buy'][0] < buyEstimate[0] - 1:
         if(maxBuyVA("VALE") > 0):
-            buy(exchange, "VALE", buyEstimate[0] - 2, min(maxBuyVA("VALE"), buyEstimate[1]))
+            buy(exchange, "VALE", buyEstimate[0] - 1, min(maxBuyVA("VALE"), buyEstimate[1]))
             print("Attempt ADR buy VALE")
         elif(maxBuyVA("VALE") == 0):
             for c, trad in enumerate(trades):
                 if(trad['type'] == "trade" and trad['status'] == "ACK"):
-                    if(buyEstimate[0] - 2 > trad['price']):
+                    if(buyEstimate[0] - 1 > trad['price']):
                         cancel(exchange, c)
-                        buy(exchange, "VALE", buyEstimate[0] - 2, min(trad['size'], buyEstimate[1]))
+                        buy(exchange, "VALE", buyEstimate[0] - 1, min(trad['size'], buyEstimate[1]))
     except:
         print("REE2")
         return
