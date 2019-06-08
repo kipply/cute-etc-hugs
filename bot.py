@@ -117,17 +117,7 @@ def main():
         next_message = read_from_exchange(exchange)
 
 
-        #close position
-        oben = portfolio["VALE"] + portfolio["VALBZ"]
-        if(oben > 0):
-            sell(exchange, "VALBZ", recent_book["VALBZ"]['buy'][0], oben)
-            if portfolio["VALE"] > 8:
-                convert(exchange, "VALE", 'SELL', 12)
-        if(oben < 0):
-            buy(exchange, "VALBZ", recent_book["VALBZ"]['sell'][0], -oben)
-            if portfolio["VALE"] < -8:
-                print ("REEEEEEEEE!")
-                convert(exchange, "VALE", 'BUY', 12)
+
 
         # print("\nNext message = ", next_message, "\n")
         extra_log.write(str(next_message))
@@ -139,6 +129,17 @@ def main():
                 flip_BOND(exchange)
             if next_message['symbol'] == "VALBZ" or next_message['symbol'] == "VALE":
                 adrArbitrage(exchange)
+                #close position
+                oben = portfolio["VALE"] + portfolio["VALBZ"]
+                if(oben > 0):
+                    sell(exchange, "VALBZ", recent_book["VALBZ"]['buy'][0], oben)
+                    if portfolio["VALE"] > 8:
+                        convert(exchange, "VALE", 'SELL', 12)
+                if(oben < 0):
+                    buy(exchange, "VALBZ", recent_book["VALBZ"]['sell'][0], -oben)
+                    if portfolio["VALE"] < -8:
+                        print ("REEEEEEEEE!")
+                        convert(exchange, "VALE", 'BUY', 12)
             if next_message['symbol'] == "VALBZ":
                 for id, trad in enumerate(trades):
                     if trad['symbol'] == "VALE" and trad['status'] == "ACK":
