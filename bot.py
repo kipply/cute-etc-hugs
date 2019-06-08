@@ -357,7 +357,7 @@ def adrArbitrage(exchange):
       buyEstimate = recent_book["VALBZ"]['buy'][0]
     except:
         print("REE11")
-      return
+        return
     # volumeBuy = buyEstimate[1]
     # for pair in recent_book["VALE"]['sell']:
     #     if pair[0] < buyEstimate[0] and volume > 0:
@@ -379,7 +379,7 @@ def adrArbitrage(exchange):
                         buy(exchange, "VALE", buyEstimate[0] - 2, min(trad['size'], buyEstimate[1]))
     except:
         print("REE2")
-      return
+        return
 
 
 #def adrPenny(exchange):
