@@ -171,7 +171,6 @@ def sell(exchange, name, price, size):
         'size': size
     })
     trades.append({
-        'type' : "trade",
         'symbol': name,
         'price': price,
         'size': size,
@@ -179,6 +178,7 @@ def sell(exchange, name, price, size):
         'dir': 'SELL',
         'fills': []
     })
+
 def convert(exchange, name, dir, size):
     write_to_exchange(exchange, {
         'type': 'convert',
@@ -187,6 +187,15 @@ def convert(exchange, name, dir, size):
         'dir' : dir,
         'size' : size
     })
+    trades.append({
+        'symbol': name,
+        'price': 0,
+        'size': size,
+        'status': 'SENT',
+        'dir': 'CONVERT',
+        'fills': []
+    })
+
 
 def flip_BOND(exchange):
     for pair in recent_book['BOND']['sell']:
