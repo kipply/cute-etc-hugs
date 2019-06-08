@@ -13,7 +13,7 @@ import json
 
 # ~~~~~============== CONFIGURATION  ==============~~~~~
 # replace REPLACEME with your team name!
-team_name="LOWRY"
+team_name="TEAMLOWRY"
 # This variable dictates whether or not the bot is connecting to the prod
 # or test exchange. Be careful with this switch!
 test_mode = True
@@ -45,7 +45,16 @@ def read_from_exchange(exchange):
 
 
 # ~~~~~============== MAIN LOOP ==============~~~~~
-recent_prices = {}
+recent_prices = {
+    "BOND": {},
+    "VALBZ": {},
+    "VALE": {},
+    "GS": {},
+    "MS": {},
+    "WFC": {},
+    "XLF": {},
+}
+
 def main():
     exchange = connect()
     write_to_exchange(exchange, {"type": "hello", "team": team_name.upper()})
@@ -56,8 +65,9 @@ def main():
     # exponential explosion in pending messages. Please, don't do that!
     print("The exchange replied:", hello_from_exchange, file=sys.stderr)
 
-
-    
+    next_message = read_from_exchange(exchange)
+    if next_message['type'] == "book": 
+        symbol = next_message['symbol']
 
 
 if __name__ == "__main__":
