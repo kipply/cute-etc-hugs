@@ -67,23 +67,13 @@ def ID():
 
 def reset_variables():
     positions = {
-<<<<<<< HEAD
-        "BOND": 0,
-        "VALBZ": 0,
-        "VALE": 0,
-        "GS": 0,
-        "MS": 0,
-        "WFC": 0,
-        "XLF": 0,
-=======
         u'BOND': 0,
         u'VALBZ': 0,
         u'VALE': 0,
         u'GS': 0,
         u'MS': 0,
         u'WFC': 0,
-        u'XLF': 0, 
->>>>>>> 2a7f2c62ecbcec5b0e910905ee9a40ab21e745fd
+        u'XLF': 0,
     }
     recent_book = {
         u'BOND': {},
