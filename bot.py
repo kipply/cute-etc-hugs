@@ -103,6 +103,7 @@ def main():
                 portfolio[symbol] += next_message["size"]
             elif next_message['dir'] == "SELL":
                 portfolio[symbol] -= next_message["size"]
+            print("Filled")
             print(next_message)
         elif next_message['type'] == "out":
             trades[next_message['order_id']]['status'] = "OUT"
