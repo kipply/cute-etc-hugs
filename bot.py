@@ -127,7 +127,9 @@ def main():
             trades[next_message['order_id']]['status'] = "OUT"
             print("OUT")
         elif next_message['type'] == "reject":
-            print("Reject")
+            offer = trades[next_message['order_id']]
+            print("Rejected:", offer['dir'], offer['price'], offer['size'])
+            print(portfolio['BOND'], offering['BOND']['SELL'])
         elif next_message['type'] == "error":
             print("Trade error!")
         elif next_message['type'] == "trade":
@@ -137,9 +139,10 @@ def main():
         if offering['BOND']['SELL'] < 100 + portfolio['BOND']:
             print(portfolio['BOND'], offering['BOND']['SELL'])
             sell(exchange, "BOND", 1001, 100 + portfolio['BOND'] - offering['BOND']['SELL'])
-        # if offering['BOND']['BUY'] < 100 - portfolio['BOND']:
-        #     buy(exchange, "BOND", 999, 100 - portfolio['BOND'] - offering['BOND']['SELL'])
-        #
+        if offering['BOND']['BUY'] < 100 - portfolio['BOND']:
+            print(portfolio['BOND'], offering['BOND']['SELL'])
+            buy(exchange, "BOND", 999, 100 - portfolio['BOND'] - offering['BOND']['SELL'])
+        
         # TODO: Handle server dying and restart
 
 
