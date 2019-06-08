@@ -267,7 +267,7 @@ def etf_arbitrage(exchange):
     est_ms /= float(temp)
 
     est_wfc = temp = count = 0
-    for sell in recent_book['WCF']['sell']:
+    for sell in recent_book['WFC']['sell']:
       est_wfc += sell[0] * sell[1]
       temp += sell[1]
       count += 1
