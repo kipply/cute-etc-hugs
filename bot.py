@@ -90,7 +90,6 @@ def main():
                 flip_BOND(exchange)
         if next_message['type'] == "trade":
             pass
-        print("In while loop")
 
 
 def flip_BOND(exchange):
