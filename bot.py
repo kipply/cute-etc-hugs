@@ -70,6 +70,15 @@ recent_book = {
     u'WFC': {},
     u'XLF': {},
 }
+offering = {
+    u'BOND': {'BUY': 0, 'SELL': 0},
+    u'VALBZ': {'BUY': 0, 'SELL': 0},
+    u'VALE': {'BUY': 0, 'SELL': 0},
+    u'GS': {'BUY': 0, 'SELL': 0},
+    u'MS': {'BUY': 0, 'SELL': 0},
+    u'WFC': {'BUY': 0, 'SELL': 0},
+    u'XLF': {'BUY': 0, 'SELL': 0},
+}
 trades = []
 
 def main():
@@ -92,16 +101,19 @@ def main():
             if next_message['symbol'] == "BOND":
                 flip_BOND(exchange)
         elif next_message['type'] == "ack":
-            ID = next_message['order_id']
-            trades[ID]['status'] = "ACK"
-            print("ACK:", trades[ID]['dir'], trades[ID]['price'], trades[ID]['size'])
+            offer = trades[next_message['order_id']]
+            offer['status'] = "ACK"
+            offering[offer['symbol']][offer['dir']] += offer['size']
+            print("ACK:", offer['dir'], offer['price'], offer['size'])
+
         elif next_message['type'] == "fill":
-            order_id = next_message['order_id']
-            trades[order_id]['fills'].append(next_message)
+            offer = trades[next_message['order_id']]
+            offer['fills'].append(next_message)
             if next_message['dir'] == "BUY":
                 portfolio[symbol] += next_message["size"]
             elif next_message['dir'] == "SELL":
                 portfolio[symbol] -= next_message["size"]
+            offering[offer['symbol']][offer['dir']] -= next_message['size']
             print("Filled")
             print(next_message)
         elif next_message['type'] == "out":
