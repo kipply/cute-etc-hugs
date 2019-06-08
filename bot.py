@@ -96,6 +96,11 @@ trades = []
 
 
 def main():
+    global portfolio
+    global recent_book
+    global offering
+    global trades
+    
     exchange = connect()
 
     write_to_exchange(exchange, {"type": "hello", "team": team_name.upper()})
