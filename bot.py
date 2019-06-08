@@ -106,7 +106,7 @@ def main():
             # Don't need to do anything
             pass
 
-
+# Hi William
 def flip_BOND(exchange):
     print("flipping bond")
     for pair in recent_book['BOND']['sell']:
