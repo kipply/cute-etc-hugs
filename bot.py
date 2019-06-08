@@ -31,6 +31,8 @@ exchange_hostname = "test-exch-" + team_name if test_mode else prod_exchange_hos
 extra_log = open('extra_logs.txt', 'w+')
 
 # ~~~~~============== NETWORKING CODE ==============~~~~~
+
+
 def connect():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -51,6 +53,7 @@ def read_from_exchange(exchange):
 
 def ID():
     return len(trades)
+
 
 portfolio = {
     u'BOND': 0,
@@ -81,6 +84,7 @@ offering = {
 }
 trades = []
 
+
 def main():
     exchange = connect()
     write_to_exchange(exchange, {"type": "hello", "team": team_name.upper()})
@@ -105,7 +109,7 @@ def main():
             offer['status'] = "ACK"
             offering[offer['symbol']][offer['dir']] += offer['size']
             print("ACK:", offer['dir'], offer['price'], offer['size'])
-            print("Offering[BOND] = ", offering['BOND']['BUY'], offering['BOND']['SELL'])
+            print("Offering[BOND]:", offering['BOND']['BUY'], offering['BOND']['SELL'])
 
         elif next_message['type'] == "fill":
             offer = trades[next_message['order_id']]
@@ -117,20 +121,25 @@ def main():
             offering[offer['symbol']][offer['dir']] -= next_message['size']
             print("Filled")
             print(next_message)
+            print("Offering[BOND]:", offering['BOND']['BUY'], offering['BOND']['SELL'])
+
         elif next_message['type'] == "out":
             trades[next_message['order_id']]['status'] = "OUT"
             print("OUT")
         elif next_message['type'] == "reject":
-            print(next_message)
+            print("Reject")
         elif next_message['type'] == "error":
-            print(next_message)
+            print("Trade error!")
         elif next_message['type'] == "trade":
             # Don't need to do anything
             pass
+
+        if offering['BOND']['SELL'] < 100 + portfolio['BOND']:
+            sell(exchange, "BOND", 1001, 100 + portfolio['BOND'] - offering['BOND']['SELL'])
+        if offering['BOND']['BUY'] < 100 - portfolio['BOND']:
+            buy(exchange, "BOND", 999, 100 - portfolio['BOND'] - offering['BOND']['SELL'])
         #
         # TODO: Handle server dying and restart
-
-
 
 
 def buy(exchange, name, price, size):
@@ -169,6 +178,7 @@ def sell(exchange, name, price, size):
         'dir': 'SELL',
         'fills': []
     })
+
 
 def flip_BOND(exchange):
     for pair in recent_book['BOND']['sell']:
