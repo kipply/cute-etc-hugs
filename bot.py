@@ -89,7 +89,7 @@ def main():
 
     while True:
         next_message = read_from_exchange(exchange)
-        extra_log.write(next_message)
+        extra_log.write(str(next_message))
         if next_message['type'] == "book":
             symbol = next_message['symbol']
             recent_book[symbol]['buy'] = next_message['buy']
