@@ -16,7 +16,7 @@ import json
 team_name = "TEAMLOWRY"
 # This variable dictates whether or not the bot is connecting to the prod
 # or test exchange. Be careful with this switch!
-test_mode = bool(open('env').read())
+test_mode = eval(open('env').read())
 
 # This setting changes which test exchange is connected to.
 # 0 is prod-like
