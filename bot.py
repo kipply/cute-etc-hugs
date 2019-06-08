@@ -28,7 +28,7 @@ prod_exchange_hostname = "production"
 port = 25000 + (test_exchange_index if test_mode else 0)
 exchange_hostname = "test-exch-" + team_name if test_mode else prod_exchange_hostname
 
-extra_log = open('extra_logs.txt', 'w+') 
+extra_log = open('extra_logs.txt', 'w+')
 
 # ~~~~~============== NETWORKING CODE ==============~~~~~
 def connect():
@@ -52,14 +52,14 @@ def read_from_exchange(exchange):
 def ID():
     return len(trades)
 
-positions = {
+portfolio = {
     u'BOND': 0,
     u'VALBZ': 0,
     u'VALE': 0,
     u'GS': 0,
     u'MS': 0,
     u'WFC': 0,
-    u'XLF': 0, 
+    u'XLF': 0,
 }
 recent_book = {
     u'BOND': {},
@@ -97,6 +97,10 @@ def main():
         elif next_message['type'] == "fill":
             order_id = next_message['order_id']
             trades[order_id]['fills'].append(next_message)
+            if next_message['dir'] == "BUY":
+                portfolio[symbol] += next_message["size"]
+            elif next_message['dir'] == "SELL":
+                portfolio[symbol] -= next_message["size"]
             print(next_message)
         elif next_message['type'] == "out":
             trades[next_message['order_id']]['status'] = "OUT"
@@ -110,7 +114,6 @@ def main():
             pass
         #
         # TODO: Handle server dying and restart
-        # 
 
 
 
