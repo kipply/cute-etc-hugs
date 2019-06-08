@@ -196,7 +196,7 @@ def main():
                 u'XLF': {},
             }
             trades = []
-            print(bcolours.FAIL + "RESET!!!!!!!!" + bcolors.ENDC)
+            print(bcolors.FAIL + "RESET!!!!!!!!" + bcolors.ENDC)
         #
         # TODO: Handle server dying and restart
 
