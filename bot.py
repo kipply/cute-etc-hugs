@@ -188,8 +188,13 @@ def adrArbitrage(exchange):
             buy(exchange, "VALBZ", sellEstimate[0], min(pair[1], volume))
             convert(exchange, "VALE", "BUY", min(pair[1], volume))
             volume -= min(pair[1], volume)
+<<<<<<< Updated upstream
     if recent_book["VALE"]['sell'][0] > sellEstimate[0]:
         sell(exchange, "VALE", sellEstimate[0], 2)
+=======
+    if recent_book["VALE"]['sell'][0] > 1 + sellEstimate[0]:
+        sell(exchange, "VALE", sellEstimate[0] + 1, 2)
+>>>>>>> Stashed changes
 
 
 
@@ -200,8 +205,11 @@ def adrArbitrage(exchange):
             buy(exchange, "VALE", pair[0], min(pair[1], volumeBuy))
             sell(exchange, "VALBZ", buyEstimate[0], min(pair[1], volumeBuy))
             volumeBuy -= min(pair[1], volumeBuy)
+<<<<<<< Updated upstream
     if recent_book["VALE"]['buy'][0] < buyEstimate[0]:
         buy(exchange, "VALE", buyEstimate[0], 2)
+=======
+>>>>>>> Stashed changes
 
 
 #def adrPenny(exchange):
