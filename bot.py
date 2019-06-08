@@ -94,8 +94,7 @@ def main():
         elif next_message['type'] == "ack":
             ID = next_message['order_id']
             trades[ID]['status'] = "ACK"
-            print("ACK")
-            print("Order: ", trades[ID]['dir'], trades[ID]['price'], trades[ID]['size'])
+            print("ACK:", trades[ID]['dir'], trades[ID]['price'], trades[ID]['size'])
         elif next_message['type'] == "fill":
             order_id = next_message['order_id']
             trades[order_id]['fills'].append(next_message)
