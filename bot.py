@@ -142,7 +142,7 @@ def main():
             sell(exchange, "BOND", 1001, 100 + portfolio['BOND'] -
                  offering['BOND']['SELL'] - offering['BOND']['PENDING_SELL'])
         if offering['BOND']['BUY'] + offering['BOND']['PENDING_BUY'] < 100 - portfolio['BOND']:
-            print("(FB) Flood buy", portfolio['BOND'], offering['BOND']['BUY'])
+            print("(FB) Offering[BOND]", offering['BOND'])
             buy(exchange, "BOND", 999, 100 - portfolio['BOND'] -
                 offering['BOND']['SELL'] - offering['BOND']['PENDING_BUY'])
 
