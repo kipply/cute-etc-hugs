@@ -103,6 +103,14 @@ def main():
             recent_book[symbol]['sell'] = next_message['sell']
             if next_message['symbol'] == "BOND":
                 flip_BOND(exchange)
+            if next_message['symbol'] == "VALBZ":
+                for id, trad in enumerate(trades):
+                    if trad['symbol'] == "VALE" && trad['status'] == "ACK":
+                        if trad['dir'] == "BUY" && trad['price'] >= next_message['sell'][0][0]:
+                            cancel(id)
+                        elif trad['dir'] == "SELL" && trad['price'] <= next_message['buy'][0][0]:
+                            cancel(id)
+
         elif next_message['type'] == "ack":
             trades[next_message['order_id']]['status'] = "ACK"
         elif next_message['type'] == "fill":
@@ -112,6 +120,16 @@ def main():
                 portfolio[symbol] += next_message["size"]
             elif next_message['dir'] == "SELL":
                 portfolio[symbol] -= next_message["size"]
+            if symbol == "VALE":
+                #close position
+                open = portfolio["VALE"]
+                if(open > 0):
+                    sell(exchange, "VALBZ", recent_book["VALBZ"]['buy'][0], open)
+                    convert(exchange, "VALE", 'BUY', open)
+                if(open < 0):
+                    sell(exchange, "VALBZ", recent_book["VALBZ"]['sell'][0], open)
+                    convert(exchange, "VALE", 'SELL', open)
+
         elif next_message['type'] == "out":
             trades[next_message['order_id']]['status'] = "OUT"
         elif next_message['type'] == "reject":
@@ -119,7 +137,6 @@ def main():
         elif next_message['type'] == "error":
             print(next_message)
         elif next_message['type'] == "trade":
-            # Don't need to do anything
             pass
         #
         # TODO: Handle server dying and restart
@@ -139,6 +156,7 @@ def buy(exchange, name, price, size):
         'size': size
     })
     trades.append({
+        'type' : "trade"
         'symbol': name,
         'price': price,
         'size': size,
@@ -158,12 +176,21 @@ def sell(exchange, name, price, size):
         'size': size
     })
     trades.append({
+        'type' : "trade"
         'symbol': name,
         'price': price,
         'size': size,
         'status': 'SENT',
         'dir': 'SELL',
         'fills': []
+    })
+def convert(exchange, name, dir, size)：
+    write_to_exchange(exchange, {
+        'type': 'convert',
+        'order_id' : ID(),
+        'symbol' : name,
+        'dir' : dir,
+        'size' : size
     })
 
 def flip_BOND(exchange):
@@ -175,6 +202,37 @@ def flip_BOND(exchange):
         if pair[0] > 1000:
             sell(exchange, "BOND", pair[0], pair[1])
 
+def adrArbitrage(exchange):
+    print("adrArbitrage")
+    sellEstimate = recent_book["VALBZ"]['sell'][0]
+    volume = sellEstimate[1]
+    for pair in recent_book["VALE"]['buy']:
+        if pair[0] > sellEstimate[0] && volume > 0:
+            sell(exchange, "VALE", pair[0], min(pair[1], volume))
+            buy(exchange, "VALBZ", sellEstimate[0], min(pair[1], volume))
+            convert(exchange, "VALE", "BUY", min(pair[1], volume))
+            volume -= min(pair[1], volume)
+    if recent_book["VALE"]['sell'][0] > sellEstimate[0]:
+        sell(exchange, "VALE", sellEstimate[0], 2)
+
+
+
+
+    buyEstimate = recent_book["VALBZ"]['buy'][0]
+    volumeBuy= buyEstimate[1]
+    for pair in recent_book["VALE"]['sell']:
+        if pair[0] < buyEstimate[0] && volume > 0
+            buy(exchange, "VALE", pair[0], min(pair[1], volumeBuy))
+            sell(exchange, "VALBZ", buyEstimate[0], min(pair[1], volumeBuy))
+            convert(exchange, "VALE", 'SELL', min(pair[1], volumeBuy))
+            volumeBuy -= min(pair[1], volumeBuy)
+    if recent_book["VALE"]['buy'][0] < buyEstimate[0]:
+        buy(exchange, "VALE", buyEstimate[0], 2)
+
+
+#def adrPenny(exchange):
+    #print("adrPenny")
+    #for
 
 if __name__ == "__main__":
     main()
