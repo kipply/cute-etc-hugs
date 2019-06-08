@@ -408,12 +408,12 @@ def adrArbitrage(exchange):
         if(maxBuyVA("VALE") > 0):
             buy(exchange, "VALE", buyEstimate[0] - 1, min(maxBuyVA("VALE"), buyEstimate[1]))
             print("Attempt ADR buy VALE")
-        # elif(maxBuyVA("VALE") == 0):
-        #     for c, trad in enumerate(trades):
-        #         if(trad['type'] == "trade" and trad['status'] == "ACK"):
-        #             if(buyEstimate[0] - 1 > trad['price']):
-        #                 cancel(exchange, c)
-        #                 buy(exchange, "VALE", buyEstimate[0] - 1, min(trad['size'], buyEstimate[1]))
+        elif(maxBuyVA("VALE") == 0):
+            for c, trad in enumerate(trades):
+                if(trad['type'] == "trade" and trad['status'] == "ACK"):
+                    if(buyEstimate[0] - 1 > trad['price']):
+                        cancel(exchange, c)
+                        buy(exchange, "VALE", buyEstimate[0] - 1, min(trad['size'], buyEstimate[1]))
     except:
         print("REE2")
         return
