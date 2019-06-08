@@ -175,6 +175,7 @@ def main():
                 if(oben < 0):
                     sell(exchange, "VALBZ", recent_book["VALBZ"]['sell'][0], -oben)
                     if portfolio["VALE"] < -4:
+                        print ("REEEEEEEEE!")
                         convert(exchange, "VALE", 'BUY', -portfolio["VALE"])
                 portfolio[offer['symbol']] -= next_message["size"]
             offering[offer['symbol']][offer['dir']] -= next_message['size']
