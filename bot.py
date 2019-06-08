@@ -28,6 +28,7 @@ prod_exchange_hostname = "production"
 port = 25000 + (test_exchange_index if test_mode else 0)
 exchange_hostname = "test-exch-" + team_name if test_mode else prod_exchange_hostname
 
+extra_log = open('extra_logs.txt', 'w+') 
 
 # ~~~~~============== NETWORKING CODE ==============~~~~~
 def connect():
@@ -48,32 +49,36 @@ def read_from_exchange(exchange):
 
 
 # ~~~~~============== MAIN LOOP ==============~~~~~
-recent_book = {
-    "BOND": {},
-    "VALBZ": {},
-    "VALE": {},
-    "GS": {},
-    "MS": {},
-    "WFC": {},
-    "XLF": {},
-}
-
+recent_book = {}
 trades = []
-
-positions = {
-    "BOND": 0,
-    "VALBZ": 0,
-    "VALE": 0,
-    "GS": 0,
-    "MS": 0,
-    "WFC": 0,
-    "XLF": 0, 
-}
+positions = {}
 
 def ID(): 
     return len(trades)
 
+def reset_variables(): 
+    positions = {
+        "BOND": 0,
+        "VALBZ": 0,
+        "VALE": 0,
+        "GS": 0,
+        "MS": 0,
+        "WFC": 0,
+        "XLF": 0, 
+    }
+    recent_book = {
+        "BOND": {},
+        "VALBZ": {},
+        "VALE": {},
+        "GS": {},
+        "MS": {},
+        "WFC": {},
+        "XLF": {},
+    }
+    trades = []
+
 def main():
+    reset_variables() 
     exchange = connect()
     write_to_exchange(exchange, {"type": "hello", "team": team_name.upper()})
     hello_from_exchange = read_from_exchange(exchange)
@@ -85,6 +90,7 @@ def main():
 
     while True:
         next_message = read_from_exchange(exchange)
+        extra_log.write(next_message)
         if next_message['type'] == "book":
             symbol = next_message['symbol']
             recent_book[symbol]['buy'] = next_message['buy']
@@ -105,7 +111,12 @@ def main():
         elif next_message['type'] == "trade":
             # Don't need to do anything
             pass
+        #
+        # TODO: Handle server dying and restart
+        # 
         print("In while loop")
+
+
 
 
 def flip_BOND(exchange):
