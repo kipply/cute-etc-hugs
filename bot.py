@@ -370,7 +370,7 @@ def convert(exchange, name, dir, size):
                 'price': 0,
                 'size': size,
                 'status': 'SENT',
-                'dir': 'CONVERT',
+                'dir': 'SELL',
                 'fills': []
     })
 
