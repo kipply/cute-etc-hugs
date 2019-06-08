@@ -114,8 +114,8 @@ def main():
     while True:
         next_message = read_from_exchange(exchange)
         for symb in next_message['symbols']: 
-          portfolio[symb][symb['symbol']] = symb['position']
-          
+          portfolio[symb['symbol']] = symb['position']
+
         # print("\nNext message = ", next_message, "\n")
         extra_log.write(str(next_message))
         if next_message['type'] == "book":
