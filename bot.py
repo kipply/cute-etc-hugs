@@ -153,7 +153,6 @@ def sell(exchange, name, price, size):
     })
 
 def flip_BOND(exchange):
-    print("flipping bond")
     for pair in recent_book['BOND']['sell']:
         if pair[0] < 1000:
             buy(exchange, "BOND", pair[0], pair[1])
