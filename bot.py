@@ -272,7 +272,7 @@ def etf_arbitrage(exchange):
 			break
 	est_wfc /= float(temp)
 
-	xlf_buy_est = (2 * est_wfc + 3 * est_ms + 2 * est_gs + 3 * est_bond) / 10.0
+  xlf_buy_est = (2 * est_wfc + 3 * est_ms + 2 * est_gs + 3 * est_bond) / 10.0
 
   if 10 * xlf_buy_est - 100 > xlf_sell_estimate * 10: 
     buy(exchange, "XLF", int(round(xlf_sell_estimate)), 10)
