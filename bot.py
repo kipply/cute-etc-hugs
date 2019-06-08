@@ -224,15 +224,15 @@ def adrArbitrage(exchange):
     try:
       sellEstimate = recent_book["VALBZ"]['sell'][0]
     except:
-      return
-    volume = sellEstimate[1]
-    for pair in recent_book["VALE"]['buy']:
-        if pair[0] > sellEstimate[0] and volume > 0:
-            sell(exchange, "VALE", pair[0], min(pair[1], volume))
-            buy(exchange, "VALBZ", sellEstimate[0], min(pair[1], volume))
-            convert(exchange, "VALE", "BUY", min(pair[1], volume))
-            print("Attempt SELL BUY CONVERT VALE/VALBZ/VARE")
-            volume -= min(pair[1], volume)
+    #   return
+    # volume = sellEstimate[1]
+    # for pair in recent_book["VALE"]['buy']:
+    #     if pair[0] > sellEstimate[0] and volume > 0:
+    #         sell(exchange, "VALE", pair[0], min(pair[1], volume))
+    #         buy(exchange, "VALBZ", sellEstimate[0], min(pair[1], volume))
+    #         convert(exchange, "VALE", "BUY", min(pair[1], volume))
+    #         print("Attempt SELL BUY CONVERT VALE/VALBZ/VARE")
+    #         volume -= min(pair[1], volume)
     try:
       if recent_book["VALE"]['sell'][0] > sellEstimate[0]:
           sell(exchange, "VALE", sellEstimate[0], 2)
@@ -240,14 +240,14 @@ def adrArbitrage(exchange):
     except: print(recent_book["VALE"]['sell'])
 
     buyEstimate = recent_book["VALBZ"]['buy'][0]
-    volumeBuy = buyEstimate[1]
-    for pair in recent_book["VALE"]['sell']:
-        if pair[0] < buyEstimate[0] and volume > 0:
-            buy(exchange, "VALE", pair[0], min(pair[1], volumeBuy))
-            sell(exchange, "VALBZ", buyEstimate[0], min(pair[1], volumeBuy))
-            convert(exchange, "VALE", 'SELL', min(pair[1], volumeBuy))
-            print("Attempt SELL BUY CONVERT VALE/VALBZ/VARE")
-            volumeBuy -= min(pair[1], volumeBuy)
+    # volumeBuy = buyEstimate[1]
+    # for pair in recent_book["VALE"]['sell']:
+    #     if pair[0] < buyEstimate[0] and volume > 0:
+    #         buy(exchange, "VALE", pair[0], min(pair[1], volumeBuy))
+    #         sell(exchange, "VALBZ", buyEstimate[0], min(pair[1], volumeBuy))
+    #         convert(exchange, "VALE", 'SELL', min(pair[1], volumeBuy))
+    #         print("Attempt SELL BUY CONVERT VALE/VALBZ/VARE")
+    #         volumeBuy -= min(pair[1], volumeBuy)
     if recent_book["VALE"]['buy'][0] < buyEstimate[0]:
         buy(exchange, "VALE", buyEstimate[0], 2)
         print("Attempt ADR buy VALE")
