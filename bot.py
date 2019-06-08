@@ -48,9 +48,6 @@ def read_from_exchange(exchange):
 
 
 # ~~~~~============== MAIN LOOP ==============~~~~~
-recent_book = {}
-trades = []
-positions = {}
 
 portfolio = {
     "BOND": 0,
@@ -65,29 +62,27 @@ portfolio = {
 def ID():
     return len(trades)
 
-def reset_variables():
-    positions = {
-        u'BOND': 0,
-        u'VALBZ': 0,
-        u'VALE': 0,
-        u'GS': 0,
-        u'MS': 0,
-        u'WFC': 0,
-        u'XLF': 0,
-    }
-    recent_book = {
-        u'BOND': {},
-        u'VALBZ': {},
-        u'VALE': {},
-        u'GS': {},
-        u'MS': {},
-        u'WFC': {},
-        u'XLF': {},
-    }
-    trades = []
+positions = {
+    u'BOND': 0,
+    u'VALBZ': 0,
+    u'VALE': 0,
+    u'GS': 0,
+    u'MS': 0,
+    u'WFC': 0,
+    u'XLF': 0,
+}
+recent_book = {
+    u'BOND': {},
+    u'VALBZ': {},
+    u'VALE': {},
+    u'GS': {},
+    u'MS': {},
+    u'WFC': {},
+    u'XLF': {},
+}
+trades = []
 
 def main():
-    reset_variables()
     exchange = connect()
     write_to_exchange(exchange, {"type": "hello", "team": team_name.upper()})
     hello_from_exchange = read_from_exchange(exchange)
@@ -102,6 +97,7 @@ def main():
         extra_log.write(str(next_message))
         if next_message['type'] == "book":
             symbol = next_message['symbol']
+            print(recent_book)
             recent_book[symbol]['buy'] = next_message['buy']
             recent_book[symbol]['sell'] = next_message['sell']
             if next_message['symbol'] == "BOND":
