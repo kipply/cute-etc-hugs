@@ -46,6 +46,7 @@ def read_from_exchange(exchange):
     return json.loads(exchange.readline())
 
 
+
 # ~~~~~============== MAIN LOOP ==============~~~~~
 recent_book = {
     "BOND": {},
@@ -58,6 +59,15 @@ recent_book = {
 }
 
 ID = 0
+positions = {
+    "BOND": 0,
+    "VALBZ": 0,
+    "VALE": 0,
+    "GS": 0,
+    "MS": 0,
+    "WFC": 0,
+    "XLF": 0, 
+}
 
 
 def main():
