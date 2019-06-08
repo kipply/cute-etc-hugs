@@ -113,6 +113,9 @@ def main():
 
     while True:
         next_message = read_from_exchange(exchange)
+        for symb in next_message['symbols']: 
+          portfolio[symb][symb['symbol']] = symb['position']
+          
         # print("\nNext message = ", next_message, "\n")
         extra_log.write(str(next_message))
         if next_message['type'] == "book":
@@ -293,9 +296,9 @@ def flip_BOND(exchange):
     #     if pair[0] > 1000:
     #         sell(exchange, "BOND", pair[0], pair[1])
 def maxBuyVA(name):
-    return 9 - portfolio[name] - offering[name]['BUY'] - offering[name]["PENDING_BUY"]
+    return 10 - portfolio[name] - offering[name]['BUY'] - offering[name]["PENDING_BUY"]
 def maxSellVA(name):
-    return 9 + portfolio[name] - offering[name]['SELL'] - offering[name]["PENDING_SELL"]
+    return 10 + portfolio[name] - offering[name]['SELL'] - offering[name]["PENDING_SELL"]
 def adrArbitrage(exchange):
     try:
       sellEstimate = recent_book["VALBZ"]['sell'][0]
