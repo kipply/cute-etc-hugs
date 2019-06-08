@@ -61,6 +61,11 @@ def read_from_exchange(exchange):
 
 # ~~~~~============== MAIN LOOP ==============~~~~~
 
+def maxBuyVA(name):
+return 10 - portfolio[name] - offering[name]['BUY'] - offering[name]["PENDING_BUY"]
+def maxSellVA(name):
+return 10 + portfolio[name] - offering[name]['SELL'] - offering[name]["PENDING_SELL"]
+
 def ID():
     return len(trades)
 
@@ -336,10 +341,6 @@ def flip_BOND(exchange):
     # for pair in recent_book['BOND']['buy']:
     #     if pair[0] > 1000:
     #         sell(exchange, "BOND", pair[0], pair[1])
-def maxBuyVA(name):
-    return 10 - portfolio[name] - offering[name]['BUY'] - offering[name]["PENDING_BUY"]
-def maxSellVA(name):
-    return 10 + portfolio[name] - offering[name]['SELL'] - offering[name]["PENDING_SELL"]
 def adrArbitrage(exchange):
 
     try:
