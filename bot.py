@@ -123,7 +123,7 @@ def main():
             offering[offer['symbol']][offer['dir']] -= next_message['size']
             print("Filled")
             print(next_message)
-            print("Offering[BOND]:", offering['BOND']['BUY'], offering['BOND']['SELL'])
+            print("Offering[BOND]:", offering['BOND'])
 
         elif next_message['type'] == "out":
             trades[next_message['order_id']]['status'] = "OUT"
