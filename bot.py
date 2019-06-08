@@ -127,7 +127,7 @@ def main():
             trades[next_message['order_id']]['status'] = "OUT"
             print(bcolors.WARNING + "OUT" + bcolors.ENDC)
         elif next_message['type'] == "reject":
-            print(bcolors.WARNING + next_message['message'] + bcolors.ENDC)
+            print(next_message)
         elif next_message['type'] == "error":
             print(next_message)
         elif next_message['type'] == "trade":
