@@ -211,6 +211,7 @@ def adrArbitrage(exchange):
     try: 
       if recent_book["VALE"]['sell'][0] > sellEstimate[0]:
           sell(exchange, "VALE", sellEstimate[0], 2)
+          print(sellEstimate[0])
           print("Attempt sell VALE")
     except: print(recent_book["VALE"]['sell'])
 
