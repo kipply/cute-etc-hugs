@@ -30,6 +30,16 @@ exchange_hostname = "test-exch-" + team_name if test_mode else prod_exchange_hos
 
 extra_log = open('extra_logs.txt', 'w+')
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 # ~~~~~============== NETWORKING CODE ==============~~~~~
 def connect():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -104,9 +114,9 @@ def main():
             print(next_message)
         elif next_message['type'] == "out":
             trades[next_message['order_id']]['status'] = "OUT"
-            print("OUT")
+            print(bcolours.WARNING + "OUT" + bcolors.ENDC)
         elif next_message['type'] == "reject":
-            print(next_message)
+            print(bcolours.WARNING + next_message + bcolors.ENDC)
         elif next_message['type'] == "error":
             print(next_message)
         elif next_message['type'] == "trade":
@@ -133,7 +143,7 @@ def main():
                 u'XLF': {},
             }
             trades = []
-            print("RESET!!!!!!!!")
+            print(bcolours.FAIL + "RESET!!!!!!!!" + bcolors.ENDC)
         #
         # TODO: Handle server dying and restart
 
