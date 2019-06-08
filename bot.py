@@ -80,6 +80,15 @@ recent_book = {
     u'WFC': {},
     u'XLF': {},
 }
+offering = {
+    u'BOND': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
+    u'VALBZ': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
+    u'VALE': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
+    u'GS': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
+    u'MS': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
+    u'WFC': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
+    u'XLF': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
+}
 trades = []
 
 def main():
@@ -112,6 +121,10 @@ def main():
 
         elif next_message['type'] == "ack":
             trades[next_message['order_id']]['status'] = "ACK"
+            offer = trades[next_message['order_id']]
+            offer['status'] = "ACK"
+            offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
+            offering[offer['symbol']][offer['dir']] += offer['size']
         elif next_message['type'] == "fill":
             order_id = next_message['order_id']
             trades[order_id]['fills'].append(next_message)
@@ -221,8 +234,8 @@ def adrArbitrage(exchange):
             buy(exchange, "VALBZ", sellEstimate[0], min(pair[1], volume))
             convert(exchange, "VALE", "BUY", min(pair[1], volume))
             volume -= min(pair[1], volume)
-    if recent_book["VALE"]['sell'][0] > sellEstimate[0]:
-        sell(exchange, "VALE", sellEstimate[0], 2)
+    if recent_book["VALE"]['sell'][0] > sellEstimate[0] + 1:
+        sell(exchange, "VALE", sellEstimate[0] + 1, 2)
 
 
 
@@ -235,8 +248,8 @@ def adrArbitrage(exchange):
             sell(exchange, "VALBZ", buyEstimate[0], min(pair[1], volumeBuy))
             convert(exchange, "VALE", 'SELL', min(pair[1], volumeBuy))
             volumeBuy -= min(pair[1], volumeBuy)
-    if recent_book["VALE"]['buy'][0] < buyEstimate[0]:
-        buy(exchange, "VALE", buyEstimate[0], 2)
+    if recent_book["VALE"]['buy'][0] < buyEstimate[0] - 1:
+        buy(exchange, "VALE", buyEstimate[0] - 1, 2)
 
 
 #def adrPenny(exchange):
