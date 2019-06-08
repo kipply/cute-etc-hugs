@@ -386,6 +386,7 @@ def adrArbitrage(exchange):
     #         volumeBuy -= min(pair[1], volumeBuy)
     try:
       if recent_book["VALE"]['buy'][0][0] < buyEstimate[0]:
+        print("REEbuy")
         if(maxBuyVA("VALE") > 0):
             buy(exchange, "VALE", buyEstimate[0], min(maxBuyVA("VALE"), buyEstimate[1]))
             print("Attempt ADR buy VALE")
