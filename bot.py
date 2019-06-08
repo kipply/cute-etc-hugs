@@ -347,11 +347,11 @@ def adrArbitrage(exchange):
             if(maxSellVA("VALE") > 0):
               sell(exchange, "VALE", sellEstimate[0] + 2, min(maxSellVA("VALE"), sellEstimate[1]))
               print("Attempt sell VALE", min(maxSellVA("VALE"), sellEstimate[1]))
-            elif(maxSellVA("VALE") == 0):
-                for c, trad in enumerate(trades):
-                    if(trad['type'] == "trade" and trad['status'] == "ACK"):
-                        cancel(exchange,c)
-                        sell(exchange, "VALE", sellEstimate[0] + 2, min(trad['size'], sellEstimate[1]))
+            # elif(maxSellVA("VALE") == 0):
+            #     for c, trad in enumerate(trades):
+            #         if(trad['type'] == "trade" and trad['status'] == "ACK"):
+            #             cancel(exchange,c)
+            #             sell(exchange, "VALE", sellEstimate[0] + 2, min(trad['size'], sellEstimate[1]))
     except: print(recent_book["VALE"]['sell'])
     try:
       buyEstimate = recent_book["VALBZ"]['buy'][0]
@@ -373,8 +373,9 @@ def adrArbitrage(exchange):
         elif(maxBuyVA("VALE") == 0):
             for c, trad in enumerate(trades):
                 if(trad['type'] == "trade" and trad['status'] == "ACK"):
-                    cancel(exchange, c)
-                    buy(exchange, "VALE", buyEstimate[0] - 2, min(trad['size'], buyEstimate[1]))
+                    if(buyEstimate[0] - 2 > trad['price']):
+                        cancel(exchange, c)
+                        buy(exchange, "VALE", buyEstimate[0] - 2, min(trad['size'], buyEstimate[1]))
     except:
       return
 
