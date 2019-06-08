@@ -375,6 +375,42 @@ def convert(exchange, name, dir, size):
     })
 
 
+
+def adr_arbitrage(exchange):
+  vale_sell_estimate = 0
+  temp = count = volume = 0
+  try: 
+    for share in recent_book['VALE']['sell']:
+      vale_sell_estimate += share[0] * share[1]
+      temp += share[1]
+      count += 1
+      if count >= 1:
+        break
+    volume  = min(temp, 10)
+    vale_sell_estimate /= float(temp)
+
+    est_valbz = temp = count = 0
+    for share in recent_book['WFC']['buy']:
+      est_valbz += share[0] * share[1]
+      temp += share[1]
+      count += 1
+      if count >= 1:
+        break
+    est_valbz /= float(temp)
+
+  except Exception as e: 
+    return
+
+  print(est_valbz, vale_sell_estimate)
+
+  if est_valbz > vale_sell_estimate: 
+    buy(exchange, "VALE", int(round(vale_sell_estimate)), volume)
+  if est_valbz - 10 > vale_sell_estimate: 
+    convert(exchange, "VALE", "SELL", portfolio["VALE"])
+    sell(exchange, "VALBZ", int(round(est_valbz)), portfolio["VALE"])
+    print("MADE ADR TRADE")
+
+
 def etf_arbitrage(exchange):
   xlf_sell_estimate = 0
   temp = count = volume = 0
