@@ -98,13 +98,14 @@ offering = {
     u'XLF': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0, 'CONVERT': 0},
 }
 trades = []
-
+filledID = [];
 
 def main():
     global portfolio
     global recent_book
     global offering
     global trades
+    global filledID
 
     exchange = connect()
 
@@ -206,6 +207,7 @@ def main():
             #             convert(exchange, "VALE", 'BUY', 12)
             portfolio[offer['symbol']] -= next_message["size"]
             offering[offer['symbol']][offer['dir']] -= next_message['size']
+            filledID.append(next_message['order_id'])
             print("Filled")
             print(next_message)
             # print("Offering[BOND]:", offering['BOND'])
@@ -216,8 +218,9 @@ def main():
               print(next_message, "OUT")
             trades[next_message['order_id']]['status'] = "OUT"
             print(bcolors.WARNING + "OUT" + bcolors.ENDC)
-            offer = trades[next_message['order_id']]
-            offering[offer['symbol']]['PENDING_' + offer['dir']] -= min(offering[offer['symbol']]['PENDING_' + offer['dir']] - 1,offer['size'])
+            if(next_message['order_id'] not in filledID):
+                offer = trades[next_message['order_id']]
+                offering[offer['symbol']]['PENDING_' + offer['dir']] -= min(offer['size'])
         elif next_message['type'] == "reject":
             print(trades[next_message['order_id']])
             print(next_message)
