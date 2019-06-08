@@ -275,7 +275,9 @@ def etf_arbitrage(exchange):
         break
     est_wfc /= float(temp)
 
-  except Exception as e: print(e)
+  except Exception as e: 
+    print(e)
+    return
   xlf_buy_est = (2 * est_wfc + 3 * est_ms + 2 * est_gs + 3 * est_bond) / 10.0
 
   print(xlf_buy_est, xlf_sell_estimate)
