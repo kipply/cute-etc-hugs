@@ -28,6 +28,7 @@ prod_exchange_hostname = "production"
 port = 25000 + (test_exchange_index if test_mode else 0)
 exchange_hostname = "test-exch-" + team_name if test_mode else prod_exchange_hostname
 
+extra_log = open('extra_logs.txt', 'w+')
 
 # ~~~~~============== NETWORKING CODE ==============~~~~~
 def connect():
@@ -46,19 +47,10 @@ def read_from_exchange(exchange):
     return json.loads(exchange.readline())
 
 
-
 # ~~~~~============== MAIN LOOP ==============~~~~~
-recent_book = {
-    "BOND": {},
-    "VALBZ": {},
-    "VALE": {},
-    "GS": {},
-    "MS": {},
-    "WFC": {},
-    "XLF": {},
-}
-
+recent_book = {}
 trades = []
+positions = {}
 
 portfolio = {
     "BOND": 0,
@@ -73,7 +65,29 @@ portfolio = {
 def ID():
     return len(trades)
 
+def reset_variables():
+    positions = {
+        "BOND": 0,
+        "VALBZ": 0,
+        "VALE": 0,
+        "GS": 0,
+        "MS": 0,
+        "WFC": 0,
+        "XLF": 0,
+    }
+    recent_book = {
+        "BOND": {},
+        "VALBZ": {},
+        "VALE": {},
+        "GS": {},
+        "MS": {},
+        "WFC": {},
+        "XLF": {},
+    }
+    trades = []
+
 def main():
+    reset_variables()
     exchange = connect()
     write_to_exchange(exchange, {"type": "hello", "team": team_name.upper()})
     hello_from_exchange = read_from_exchange(exchange)
@@ -85,6 +99,7 @@ def main():
 
     while True:
         next_message = read_from_exchange(exchange)
+        extra_log.write(str(next_message))
         if next_message['type'] == "book":
             symbol = next_message['symbol']
             recent_book[symbol]['buy'] = next_message['buy']
@@ -109,34 +124,59 @@ def main():
         elif next_message['type'] == "trade":
             # Don't need to do anything
             pass
+        #
+        # TODO: Handle server dying and restart
+        #
+        print("In while loop")
 
-# Hi William
+
+
+
+def buy(exchange, name, price, size):
+    write_to_exchange(exchange, {
+        'type': 'add',
+        'order_id': ID(),
+        'symbol': name,
+        'dir': 'BUY',
+        'price': price,
+        'size': size
+    })
+    trades.append({
+        'symbol': name,
+        'price': price,
+        'size': size,
+        'status': 'SENT',
+        'dir': 'BUY',
+        'fills': []
+    })
+
+
+def sell(exchange, name, price, size):
+    write_to_exchange(exchange, {
+        'type': 'add',
+        'order_id': ID(),
+        'symbol': name,
+        'dir': 'SELL',
+        'price': price,
+        'size': size
+    })
+    trades.append({
+        'symbol': name,
+        'price': price,
+        'size': size,
+        'status': 'SENT',
+        'dir': 'SELL',
+        'fills': []
+    })
+
 def flip_BOND(exchange):
     print("flipping bond")
     for pair in recent_book['BOND']['sell']:
         if pair[0] < 1000:
-            write_to_exchange(exchange, {'type': 'add', 'order_id': ID(), 'symbol': 'BOND', 'dir': 'BUY',
-                                         'price': pair[0], 'size': pair[1]})
-            trades.append({
-                    'symbol': 'BOND',
-                    'price': pair[0],
-                    'size': pair[1],
-                    'status': 'SENT',
-                    'dir': 'BUY',
-                    'fills': []
-                })
+            buy(exchange, "BOND", pair[0], pair[1])
     for pair in recent_book['BOND']['buy']:
         if pair[0] > 1000:
-            write_to_exchange(exchange, {'type': 'add', 'order_id': ID(), 'symbol': 'BOND', 'dir': 'SELL',
-                                         'price': pair[0], 'size': pair[1]})
-            trades.append({
-                    'symbol': 'BOND',
-                    'price': pair[0],
-                    'size': pair[1],
-                    'status': 'SENT',
-                    'dir': 'SELL',
-                    'fills': []
-                })
+            sell(exchange, "BOND", pair[0], pair[1])
 
 
 if __name__ == "__main__":
