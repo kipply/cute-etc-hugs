@@ -180,7 +180,7 @@ def main():
             offering[offer['symbol']][offer['dir']] -= next_message['size']
             print("Filled")
             print(next_message)
-            print("Offering[BOND]:", offering['BOND'])
+            # print("Offering[BOND]:", offering['BOND'])
 
         elif next_message['type'] == "out":
             trades[next_message['order_id']]['status'] = "OUT"
@@ -280,6 +280,7 @@ def sell(exchange, name, price, size):
 
 
 def convert(exchange, name, dir, size):
+    print("trying_to_convert", name, dir, size)
     write_to_exchange(exchange, {
         'type': 'convert',
         'order_id' : ID(),
