@@ -64,7 +64,7 @@ def read_from_exchange(exchange):
 def maxBuyVA(name):
     print("portf")
     print(name)
-    print(portfolia[name])
+    print(portfolio[name])
     print(offering[name]['BUY'])
     print(offering[name]["PENDING_BUY"])
     return 10 - portfolio[name] - offering[name]['BUY'] - offering[name]["PENDING_BUY"]
