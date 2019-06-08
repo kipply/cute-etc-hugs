@@ -154,8 +154,7 @@ def main():
             print("Rejected:", offer['dir'], offer['price'], offer['size'], "Reason:", next_message['error'])
             # print("AFTER Reject: Offering:", offering['BOND'])
             if next_message['error'] == "LIMIT:OPEN_ORDERS":
-                print("Order limit:", len(open_orders))
-                break
+                removeOpenOrder(exchange)
             if next_message['error'] == "LIMIT:ADD_RATE" or next_message['error'] == "TRADING_CLOSED":
                 time.sleep(0.1)
         elif next_message['type'] == "error":
@@ -204,6 +203,8 @@ def main():
 
 def buy(exchange, name, price, size):
     print("trying to buy", name, price, size)
+    if len(open_orders) > 95:
+        removeOpenOrder(exchange)
     write_to_exchange(exchange, {
         'type': 'add',
         'order_id': ID(),
@@ -225,6 +226,8 @@ def buy(exchange, name, price, size):
 
 def sell(exchange, name, price, size):
     print("trying to sell", name, price, size)
+    if len(open_orders) > 95:
+        removeOpenOrder(exchange)
     write_to_exchange(exchange, {
         'type': 'add',
         'order_id': ID(),
@@ -253,6 +256,17 @@ def flip_BOND(exchange):
     #     if pair[0] > 1000:
     #         sell(exchange, "BOND", pair[0], pair[1])
 
+def removeOpenOrder(exchange):
+    minSize = 1000
+    besti = -1
+    for i in open_orders:
+        if trades[i]['size'] < minSize:
+            minSize = trades[i]['size']
+            besti = i
+        elif trades[i]['size'] == minSize and i > besti:
+            besti = i
+    open_orders.remove(i)
+    write_to_exchange(exchange, {"type": "cancel", "order_id": i})
 
 if __name__ == "__main__":
     main()
