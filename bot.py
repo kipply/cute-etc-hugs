@@ -216,8 +216,8 @@ def main():
               print(next_message, "OUT")
             trades[next_message['order_id']]['status'] = "OUT"
             print(bcolors.WARNING + "OUT" + bcolors.ENDC)
-            # offer = trades[next_message['order_id']]
-            # offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
+            offer = trades[next_message['order_id']]
+            offering[offer['symbol']]['PENDING_' + offer['dir']] -= min(offering[offer['symbol']]['PENDING_' + offer['dir']] - 1,offer['size'])
         elif next_message['type'] == "reject":
             print(trades[next_message['order_id']])
             print(next_message)
