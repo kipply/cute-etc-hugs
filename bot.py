@@ -297,6 +297,7 @@ def maxBuyVA(name):
 def maxSellVA(name):
     return 10 + portfolio[name] - offering[name]['SELL'] - offering[name]["PENDING_SELL"]
 def adrArbitrage(exchange):
+
     try:
       sellEstimate = recent_book["VALBZ"]['sell'][0]
     except:
