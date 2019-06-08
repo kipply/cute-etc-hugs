@@ -22,7 +22,7 @@ test_mode = True
 # 0 is prod-like
 # 1 is slower
 # 2 is empty
-test_exchange_index = 2
+test_exchange_index = 0
 prod_exchange_hostname = "production"
 
 port = 25000 + (test_exchange_index if test_mode else 0)
@@ -84,6 +84,7 @@ def main():
 
 def flip_BOND(exchange):
     # total = 0
+    print()
     for i in range(len(recent_book['BOND']['sell'])):
         if recent_book['BOND']['sell'][i][0] < 1000:
             # total += recent_book['BOND']['sell'][i][1]
@@ -91,6 +92,11 @@ def flip_BOND(exchange):
             write_to_exchange(exchange, {"type": "add", "order_id": ID, "symbol": "BOND", "dir": "BUY",
                                          "price": recent_book['BOND']['sell'][i][0],
                                          "size": recent_book['BOND']['sell'][i][1]})
+    for pair in recent_book['BOND']['buy']:
+        if pair[0] > 1000:
+            ID += 1
+            write_to_exchange(exchange, {'type': 'add', 'order_id': ID, 'symbol': 'BOND', 'dir': 'SELL',
+                                         'price': pair[0], 'size': pair[1]})
 
 
 if __name__ == "__main__":
