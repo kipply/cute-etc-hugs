@@ -58,9 +58,7 @@ recent_book = {
     "XLF": {},
 }
 
-<<<<<<< HEAD
 trades = []
-=======
 ID = 0
 positions = {
     "BOND": 0,
