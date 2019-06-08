@@ -16,7 +16,7 @@ import json
 team_name = "TEAMLOWRY"
 # This variable dictates whether or not the bot is connecting to the prod
 # or test exchange. Be careful with this switch!
-test_mode = True
+test_mode = eval(open('env').read())
 
 # This setting changes which test exchange is connected to.
 # 0 is prod-like
@@ -29,6 +29,16 @@ port = 25000 + (test_exchange_index if test_mode else 0)
 exchange_hostname = "test-exch-" + team_name if test_mode else prod_exchange_hostname
 
 extra_log = open('extra_logs.txt', 'w+')
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
 # ~~~~~============== NETWORKING CODE ==============~~~~~
 
@@ -127,17 +137,40 @@ def main():
 
         elif next_message['type'] == "out":
             trades[next_message['order_id']]['status'] = "OUT"
-            print("OUT")
+            print(bcolours.WARNING + "OUT" + bcolors.ENDC)
         elif next_message['type'] == "reject":
             offer = trades[next_message['order_id']]
             offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
             print("Rejected:", offer['dir'], offer['price'], offer['size'], "Reason:", next_message['error'])
-
         elif next_message['type'] == "error":
             print("Trade error!")
         elif next_message['type'] == "trade":
             # Don't need to do anything
             pass
+        elif next_message['type'] == "close":
+            # reset everything
+            portfolio = {
+                u'BOND': 0,
+                u'VALBZ': 0,
+                u'VALE': 0,
+                u'GS': 0,
+                u'MS': 0,
+                u'WFC': 0,
+                u'XLF': 0,
+            }
+            recent_book = {
+                u'BOND': {},
+                u'VALBZ': {},
+                u'VALE': {},
+                u'GS': {},
+                u'MS': {},
+                u'WFC': {},
+                u'XLF': {},
+            }
+            trades = []
+            print(bcolours.FAIL + "RESET!!!!!!!!" + bcolors.ENDC)
+        #
+        # TODO: Handle server dying and restart
 
         if offering['BOND']['SELL'] + offering['BOND']['PENDING_SELL'] < 100 + portfolio['BOND']:
             print("(FS) Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
