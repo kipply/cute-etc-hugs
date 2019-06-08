@@ -111,7 +111,7 @@ def main():
             offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
             offering[offer['symbol']][offer['dir']] += offer['size']
             print("ACK:", offer['dir'], offer['price'], offer['size'])
-            print("Offering[BOND]:", offering['BOND']['BUY'], offering['BOND']['SELL'])
+            print("Offering[BOND]:", offering['BOND'])
 
         elif next_message['type'] == "fill":
             offer = trades[next_message['order_id']]
@@ -138,11 +138,11 @@ def main():
             pass
 
         if offering['BOND']['SELL'] + offering['BOND']['PENDING_SELL'] < 100 + portfolio['BOND']:
-            print("Flood sell", portfolio['BOND'], offering['BOND']['SELL'])
+            print("(FS) Offering[BOND]:", offering['BOND'])
             sell(exchange, "BOND", 1001, 100 + portfolio['BOND'] -
                  offering['BOND']['SELL'] - offering['BOND']['PENDING_SELL'])
         if offering['BOND']['BUY'] + offering['BOND']['PENDING_BUY'] < 100 - portfolio['BOND']:
-            print("Flood buy", portfolio['BOND'], offering['BOND']['BUY'])
+            print("(FB) Flood buy", portfolio['BOND'], offering['BOND']['BUY'])
             buy(exchange, "BOND", 999, 100 - portfolio['BOND'] -
                 offering['BOND']['SELL'] - offering['BOND']['PENDING_BUY'])
 
