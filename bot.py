@@ -196,7 +196,10 @@ def flip_BOND(exchange):
 
 def adrArbitrage(exchange):
     print("adrArbitrage")
-    sellEstimate = recent_book["VALBZ"]['sell'][0]
+    try: 
+      sellEstimate = recent_book["VALBZ"]['sell'][0]
+    except: 
+      return
     volume = sellEstimate[1]
     for pair in recent_book["VALE"]['buy']:
         if pair[0] > sellEstimate[0] and volume > 0:
