@@ -113,6 +113,17 @@ def main():
     for symb in hello_from_exchange['symbols']:
       portfolio[symb['symbol']] = symb['position']
 
+     oben = portfolio["VALE"] - portfolio["VALBZ"]
+     if(oben > 0):
+         sell(exchange, "VALBZ", recent_book["VALBZ"]['buy'][0], oben)
+         if portfolio["VALE"] > 4:
+             convert(exchange, "VALE", 'SELL', portfolio["VALE"])
+     if(oben < 0):
+         sell(exchange, "VALBZ", recent_book["VALBZ"]['sell'][0], -oben)
+         if portfolio["VALE"] < -4:
+             print ("REEEEEEEEE!")
+             convert(exchange, "VALE", 'BUY', -portfolio["VALE"])
+
     while True:
         next_message = read_from_exchange(exchange)
 
@@ -177,7 +188,7 @@ def main():
                     if portfolio["VALE"] < -4:
                         print ("REEEEEEEEE!")
                         convert(exchange, "VALE", 'BUY', -portfolio["VALE"])
-                portfolio[offer['symbol']] -= next_message["size"]
+            portfolio[offer['symbol']] -= next_message["size"]
             offering[offer['symbol']][offer['dir']] -= next_message['size']
             print("Filled")
             print(next_message)
