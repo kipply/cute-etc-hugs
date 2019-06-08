@@ -76,9 +76,10 @@ def main():
             symbol = next_message['symbol']
             recent_book[symbol]['buy'] = next_message['buy']
             recent_book[symbol]['sell'] = next_message['sell']
+            if next_message['symbol'] == "BOND":
+                flip_BOND(exchange)
         if next_message['type'] == "trade":
             pass
-        flip_BOND(exchange)
 
 
 def flip_BOND(exchange):
