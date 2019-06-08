@@ -148,7 +148,7 @@ def main():
             if next_message['dir'] == "BUY":
                 portfolio[offer['symbol']] += next_message["size"]
             elif next_message['dir'] == "SELL":
-                portfolio[symbol] -= next_message["size"]
+                portfolio[offer['symbol']] -= next_message["size"]
             if symbol == "VALE":
                 #close position
                 oben = portfolio["VALE"]
@@ -293,9 +293,9 @@ def flip_BOND(exchange):
     #     if pair[0] > 1000:
     #         sell(exchange, "BOND", pair[0], pair[1])
 def maxBuyVA(name):
-    return 9 - portfolio[name] - offering[name]['BUY'] - offering[name]["PENDING_BUY"]
+    return 10 - portfolio[name] - offering[name]['BUY'] - offering[name]["PENDING_BUY"]
 def maxSellVA(name):
-    return 9 + portfolio[name] - offering[name]['SELL'] - offering[name]["PENDING_SELL"]
+    return 10 + portfolio[name] - offering[name]['SELL'] - offering[name]["PENDING_SELL"]
 def adrArbitrage(exchange):
     try:
       sellEstimate = recent_book["VALBZ"]['sell'][0]
