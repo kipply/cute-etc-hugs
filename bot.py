@@ -272,16 +272,16 @@ def etf_arbitrage(exchange):
 			break
 	est_wfc /= float(temp)
 
-  xlf_buy_est = (2 * est_wfc + 3 * est_ms + 2 * est_gs + 3 * est_bond) / 10.0
+#  xlf_buy_est = (2 * est_wfc + 3 * est_ms + 2 * est_gs + 3 * est_bond) / 10.0
 
-  if 10 * xlf_buy_est - 100 > xlf_sell_estimate * 10: 
-    buy(exchange, "XLF", int(round(xlf_sell_estimate)), 10)
-    convert(exchange, "XLF", "SELL", 10)
-    sell(exchange, "BOND", round(est_bond), 30)
-    sell(exchange, "GS", round(est_gs), 20)
-    sell(exchange, "MS", round(est_ms), 30)
-    sell(exchange, "WFC", round(est_wfc), 30)
-    print("MADE ETF TRADE FOR 10")
+#  if 10 * xlf_buy_est - 100 > xlf_sell_estimate * 10: 
+#    buy(exchange, "XLF", int(round(xlf_sell_estimate)), 10)
+#    convert(exchange, "XLF", "SELL", 10)
+#    sell(exchange, "BOND", round(est_bond), 30)
+#    sell(exchange, "GS", round(est_gs), 20)
+#    sell(exchange, "MS", round(est_ms), 30)
+#    sell(exchange, "WFC", round(est_wfc), 30)
+#    print("MADE ETF TRADE FOR 10")
 
 
 if __name__ == "__main__":
