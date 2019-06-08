@@ -45,7 +45,7 @@ def read_from_exchange(exchange):
 
 
 # ~~~~~============== MAIN LOOP ==============~~~~~
-recent_prices = {
+recent_book = {
     "BOND": {},
     "VALBZ": {},
     "VALE": {},
@@ -68,7 +68,8 @@ def main():
     next_message = read_from_exchange(exchange)
     if next_message['type'] == "book": 
         symbol = next_message['symbol']
-
+        recent_book[symbol]['buy'] = next_message['buy']
+        recent_book[symbol]['sell'] = next_message['sell']
 
 if __name__ == "__main__":
     main()
