@@ -332,11 +332,13 @@ def adrArbitrage(exchange):
     #         convert(exchange, "VALE", 'SELL', min(pair[1], volumeBuy))
     #         print("Attempt SELL BUY CONVERT VALE/VALBZ/VARE")
     #         volumeBuy -= min(pair[1], volumeBuy)
-    if recent_book["VALE"]['buy'][0] < buyEstimate[0] - 1:
-        if(maxBuyVA("VALE") > 0):
-            buy(exchange, "VALE", buyEstimate[0] - 1, maxBuyVA("VALE"))
-            print("Attempt ADR buy VALE")
-
+    try: 
+      if recent_book["VALE"]['buy'][0] < buyEstimate[0] - 1:
+          if(maxBuyVA("VALE") > 0):
+              buy(exchange, "VALE", buyEstimate[0] - 1, maxBuyVA("VALE"))
+              print("Attempt ADR buy VALE")
+    except: 
+      return
 
 
 #def adrPenny(exchange):
