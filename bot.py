@@ -355,9 +355,9 @@ def adrArbitrage(exchange):
     #         print("Attempt SELL BUY CONVERT VALE/VALBZ/VARE")
     #         volume -= min(pair[1], volume)
     try:
-        if recent_book["VALE"]['sell'][0][0] > sellEstimate[0] + 1:
+        if recent_book["VALE"]['sell'][0][0] > sellEstimate[0] + 2:
             if(maxSellVA("VALE") > 0):
-              sell(exchange, "VALE", sellEstimate[0] + 1, min(maxSellVA("VALE"), sellEstimate[1]))
+              sell(exchange, "VALE", sellEstimate[0] + 2, min(maxSellVA("VALE"), sellEstimate[1]))
               print("Attempt sell VALE", min(maxSellVA("VALE"), sellEstimate[1]))
             # elif(maxSellVA("VALE") == 0):
             #     for c, trad in enumerate(trades):
@@ -379,16 +379,16 @@ def adrArbitrage(exchange):
     #         print("Attempt SELL BUY CONVERT VALE/VALBZ/VARE")
     #         volumeBuy -= min(pair[1], volumeBuy)
     try:
-      if recent_book["VALE"]['buy'][0][0] < buyEstimate[0] - 1:
+      if recent_book["VALE"]['buy'][0][0] < buyEstimate[0] - 2:
         if(maxBuyVA("VALE") > 0):
-            buy(exchange, "VALE", buyEstimate[0] - 1, min(maxBuyVA("VALE"), buyEstimate[1]))
+            buy(exchange, "VALE", buyEstimate[0] - 2, min(maxBuyVA("VALE"), buyEstimate[1]))
             print("Attempt ADR buy VALE")
-        elif(maxBuyVA("VALE") == 0):
-            for c, trad in enumerate(trades):
-                if(trad['type'] == "trade" and trad['status'] == "ACK"):
-                    if(buyEstimate[0] - 1 > trad['price']):
-                        cancel(exchange, c)
-                        buy(exchange, "VALE", buyEstimate[0] - 1, min(trad['size'], buyEstimate[1]))
+        # elif(maxBuyVA("VALE") == 0):
+        #     for c, trad in enumerate(trades):
+        #         if(trad['type'] == "trade" and trad['status'] == "ACK"):
+        #             if(buyEstimate[0] - 1 > trad['price']):
+        #                 cancel(exchange, c)
+        #                 buy(exchange, "VALE", buyEstimate[0] - 1, min(trad['size'], buyEstimate[1]))
     except:
         print("REE2")
         return
