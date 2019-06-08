@@ -46,7 +46,6 @@ def read_from_exchange(exchange):
     return json.loads(exchange.readline())
 
 
-
 # ~~~~~============== MAIN LOOP ==============~~~~~
 recent_book = {
     "BOND": {},
@@ -67,11 +66,13 @@ positions = {
     "GS": 0,
     "MS": 0,
     "WFC": 0,
-    "XLF": 0, 
+    "XLF": 0,
 }
 
-def ID(): 
+
+def ID():
     return len(trades)
+
 
 def main():
     exchange = connect()
@@ -91,48 +92,67 @@ def main():
             recent_book[symbol]['sell'] = next_message['sell']
             if next_message['symbol'] == "BOND":
                 flip_BOND(exchange)
-        elif next_message['type'] == "ack": 
+        elif next_message['type'] == "ack":
             trades[next_message['order_id']]['status'] = "ACK"
-        elif next_message['type'] == "fill": 
+        elif next_message['type'] == "fill":
             order_id = next_message['order_id']
             trades[order_id]['fills'].append(next_message)
-        elif next_message['type'] == "out": 
+        elif next_message['type'] == "out":
             trades[next_message['order_id']]['status'] = "OUT"
-        elif next_message['type'] == "reject": 
+        elif next_message['type'] == "reject":
             print(next_message)
-        elif next_message['type'] == "error": 
+        elif next_message['type'] == "error":
             print(next_message)
         elif next_message['type'] == "trade":
             # Don't need to do anything
             pass
 
-# Hi William
+
+def buy(exchange, name, price, size):
+    write_to_exchange(exchange, {
+        'type': 'add',
+        'order_id': ID(),
+        'symbol': name,
+        'dir': 'BUY',
+        'price': price,
+        'size': size
+    })
+    trades.append({
+        'symbol': name,
+        'price': price,
+        'size': size,
+        'status': 'SENT',
+        'dir': 'BUY',
+        'fills': []
+    })
+
+
+def sell(exchange, name, price, size):
+    write_to_exchange(exchange, {
+        'type': 'add',
+        'order_id': ID(),
+        'symbol': name,
+        'dir': 'SELL',
+        'price': price,
+        'size': size
+    })
+    trades.append({
+        'symbol': name,
+        'price': price,
+        'size': size,
+        'status': 'SENT',
+        'dir': 'SELL',
+        'fills': []
+    })
+
 def flip_BOND(exchange):
     print("flipping bond")
     for pair in recent_book['BOND']['sell']:
         if pair[0] < 1000:
-            write_to_exchange(exchange, {'type': 'add', 'order_id': ID(), 'symbol': 'BOND', 'dir': 'BUY',
-                                         'price': pair[0], 'size': pair[1]})
-            trades.append({
-                    'symbol': 'BOND', 
-                    'price': pair[0], 
-                    'size': pair[1],
-                    'status': 'SENT',
-                    'dir': 'BUY',
-                    'fills': []
-                })
+            buy(exchange, "BOND", pair[0], pair[1])
     for pair in recent_book['BOND']['buy']:
         if pair[0] > 1000:
-            write_to_exchange(exchange, {'type': 'add', 'order_id': ID(), 'symbol': 'BOND', 'dir': 'SELL',
-                                         'price': pair[0], 'size': pair[1]})
-            trades.append({
-                    'symbol': 'BOND', 
-                    'price': pair[0], 
-                    'size': pair[1],
-                    'status': 'SENT',
-                    'dir': 'SELL',
-                    'fills': []
-                })
+            sell(exchange, "BOND", pair[0], pair[1])
 
 
 if __name__ == "__main__":
