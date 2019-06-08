@@ -215,8 +215,9 @@ def main():
             print(trades[next_message['order_id']])
             print(next_message)
             offer = trades[next_message['order_id']]
-            offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
-            print("Rejected:", offer['dir'], offer['price'], offer['size'], "Reason:", next_message['error'])
+            if(offer['type'] == "trade"):
+                offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
+                print("Rejected:", offer['dir'], offer['price'], offer['size'], "Reason:", next_message['error'])
         elif next_message['type'] == "error":
             print("Trade error!")
         elif next_message['type'] == "trade":
