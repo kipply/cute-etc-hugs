@@ -140,11 +140,11 @@ def main():
             pass
 
         if offering['BOND']['SELL'] + offering['BOND']['PENDING_SELL'] < 100 + portfolio['BOND']:
-            print("(FS) Offering[BOND]:", offering['BOND'])
+            print("(FS) Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
             sell(exchange, "BOND", 1001, 100 + portfolio['BOND'] -
                  offering['BOND']['SELL'] - offering['BOND']['PENDING_SELL'])
         if offering['BOND']['BUY'] + offering['BOND']['PENDING_BUY'] < 100 - portfolio['BOND']:
-            print("(FB) Offering[BOND]", offering['BOND'])
+            print("(FS) Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
             buy(exchange, "BOND", 999, 100 - portfolio['BOND'] -
                 offering['BOND']['SELL'] - offering['BOND']['PENDING_BUY'])
 
