@@ -229,49 +229,50 @@ def convert(exchange, name, dir, size):
 def etf_arbitrage(exchange):
 	xlf_sell_estimate = 0
 	temp = count = 0
-	for sell in recent_book['XLF']['sell']:
-		xlf_sell_estimate += sell[0] * sell[1]
-		temp += sell[1]
-		count += 1
-		if count >= 3:
-			break
-	xlf_sell_estimate /= float(temp)
+  try: 
+  	for sell in recent_book['XLF']['sell']:
+  		xlf_sell_estimate += sell[0] * sell[1]
+  		temp += sell[1]
+  		count += 1
+  		if count >= 3:
+  			break
+  	xlf_sell_estimate /= float(temp)
 
-	est_bond = temp = count = 0
-	for sell in recent_book['BOND']['sell']:
-		est_bond += sell[0] * sell[1]
-		temp += sell[1]
-		count += 1
-		if count >= 3:
-			break
-	est_bond /= float(temp)
+  	est_bond = temp = count = 0
+  	for sell in recent_book['BOND']['sell']:
+  		est_bond += sell[0] * sell[1]
+  		temp += sell[1]
+  		count += 1
+  		if count >= 3:
+  			break
+  	est_bond /= float(temp)
 
-	est_gs = temp = count = 0
-	for sell in recent_book['GS']['sell']:
-		est_gs += sell[0] * sell[1]
-		temp += sell[1]
-		count += 1
-		if count >= 3:
-			break
-	est_gs /= float(temp)
+  	est_gs = temp = count = 0
+  	for sell in recent_book['GS']['sell']:
+  		est_gs += sell[0] * sell[1]
+  		temp += sell[1]
+  		count += 1
+  		if count >= 3:
+  			break
+  	est_gs /= float(temp)
 
-	est_ms = temp = count = 0
-	for sell in recent_book['MS']['sell']:
-		est_ms += sell[0] * sell[1]
-		temp += sell[1]
-		count += 1
-		if count >= 3:
-			break
-	est_ms /= float(temp)
+  	est_ms = temp = count = 0
+  	for sell in recent_book['MS']['sell']:
+  		est_ms += sell[0] * sell[1]
+  		temp += sell[1]
+  		count += 1
+  		if count >= 3:
+  			break
+  	est_ms /= float(temp)
 
-	est_wfc = temp = count = 0
-	for sell in recent_book['WCF']['sell']:
-		est_wfc += sell[0] * sell[1]
-		temp += sell[1]
-		count += 1
-		if count >= 3:
-			break
-
+  	est_wfc = temp = count = 0
+  	for sell in recent_book['WCF']['sell']:
+  		est_wfc += sell[0] * sell[1]
+  		temp += sell[1]
+  		count += 1
+  		if count >= 3:
+  			break
+  except: return
 	est_wfc /= float(temp)
 
 	xlf_buy_est = (2 * est_wfc + 3 * est_ms + 2 * est_gs + 3 * est_bond) / 10.0
