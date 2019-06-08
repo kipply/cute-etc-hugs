@@ -10,6 +10,7 @@ from __future__ import print_function
 import sys
 import socket
 import json
+import time
 
 # ~~~~~============== CONFIGURATION  ==============~~~~~
 # replace REPLACEME with your team name!
@@ -93,7 +94,7 @@ offering = {
     u'XLF': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
 }
 trades = []
-
+open_orders = set()
 
 def main():
     global portfolio
@@ -129,6 +130,7 @@ def main():
             offering[offer['symbol']][offer['dir']] += offer['size']
             print("ACK:", offer['dir'], offer['price'], offer['size'])
             print("Offering[BOND]:", offering['BOND'])
+            open_orders.add(next_message['order_id'])
 
         elif next_message['type'] == "fill":
             offer = trades[next_message['order_id']]
@@ -145,13 +147,17 @@ def main():
         elif next_message['type'] == "out":
             trades[next_message['order_id']]['status'] = "OUT"
             print(bcolors.WARNING + "OUT" + bcolors.ENDC)
+            open_orders.remove(next_message['order_id'])
         elif next_message['type'] == "reject":
             offer = trades[next_message['order_id']]
             offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
             print("Rejected:", offer['dir'], offer['price'], offer['size'], "Reason:", next_message['error'])
             # print("AFTER Reject: Offering:", offering['BOND'])
-            if next_message['error'] == "ADD_RATE":
+            if next_message['error'] == "LIMIT:OPEN_ORDERS":
+                print("Order limit:", len(open_orders))
                 break
+            if next_message['error'] == "LIMIT:ADD_RATE":
+                time.sleep(0.1)
         elif next_message['type'] == "error":
             print("Trade error!")
         elif next_message['type'] == "trade":
