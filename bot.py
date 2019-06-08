@@ -97,7 +97,7 @@ def main():
 
     while True:
         next_message = read_from_exchange(exchange)
-        # print("\n\nNext message = ", next_message, "\n\n")
+        print("\nNext message = ", next_message, "\n")
         extra_log.write(str(next_message))
         if next_message['type'] == "book":
             symbol = next_message['symbol']
@@ -130,7 +130,9 @@ def main():
             print("OUT")
         elif next_message['type'] == "reject":
             offer = trades[next_message['order_id']]
+            offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
             print("Rejected:", offer['dir'], offer['price'], offer['size'], "Reason:", next_message['error'])
+
         elif next_message['type'] == "error":
             print("Trade error!")
         elif next_message['type'] == "trade":
@@ -192,12 +194,13 @@ def sell(exchange, name, price, size):
 
 
 def flip_BOND(exchange):
-    for pair in recent_book['BOND']['sell']:
-        if pair[0] < 1000:
-            buy(exchange, "BOND", pair[0], pair[1])
-    for pair in recent_book['BOND']['buy']:
-        if pair[0] > 1000:
-            sell(exchange, "BOND", pair[0], pair[1])
+    return
+    # for pair in recent_book['BOND']['sell']:
+    #     if pair[0] < 1000:
+    #         buy(exchange, "BOND", pair[0], pair[1])
+    # for pair in recent_book['BOND']['buy']:
+    #     if pair[0] > 1000:
+    #         sell(exchange, "BOND", pair[0], pair[1])
 
 
 if __name__ == "__main__":
