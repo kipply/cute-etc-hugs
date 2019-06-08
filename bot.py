@@ -83,21 +83,17 @@ def main():
 
 
 def flip_BOND(exchange):
-    # total = 0
-    print()
-    for i in range(len(recent_book['BOND']['sell'])):
-        if recent_book['BOND']['sell'][i][0] < 1000:
-            # total += recent_book['BOND']['sell'][i][1]
+    print("flipping bond")
+    for pair in recent_book['BOND']['sell']:
+        if pair[0] < 1000:
             ID += 1
-            write_to_exchange(exchange, {"type": "add", "order_id": ID, "symbol": "BOND", "dir": "BUY",
-                                         "price": recent_book['BOND']['sell'][i][0],
-                                         "size": recent_book['BOND']['sell'][i][1]})
+            write_to_exchange(exchange, {'type': 'add', 'order_id': ID, 'symbol': 'BOND', 'dir': 'BUY',
+                                         'price': pair[0], 'size': pair[1]})
     for pair in recent_book['BOND']['buy']:
         if pair[0] > 1000:
             ID += 1
             write_to_exchange(exchange, {'type': 'add', 'order_id': ID, 'symbol': 'BOND', 'dir': 'SELL',
                                          'price': pair[0], 'size': pair[1]})
-
 
 if __name__ == "__main__":
     main()
