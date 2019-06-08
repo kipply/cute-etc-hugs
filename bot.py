@@ -156,12 +156,12 @@ def main():
             if next_message['error'] == "LIMIT:OPEN_ORDERS":
                 print("Order limit:", len(open_orders))
                 break
-            if next_message['error'] == "LIMIT:ADD_RATE":
+            if next_message['error'] == "LIMIT:ADD_RATE" or next_message['error'] == "TRADING_CLOSED":
                 time.sleep(0.1)
         elif next_message['type'] == "error":
             print("Trade error!")
         elif next_message['type'] == "trade":
-            # Don't need to do anything
+            # Don't need to do anything 
             pass
         elif next_message['type'] == "close":
             # reset everything
@@ -188,14 +188,14 @@ def main():
         #
         # TODO: Handle server dying and restart
 
-        if offering['BOND']['SELL'] + offering['BOND']['PENDING_SELL'] < 100 + portfolio['BOND']:
+        if offering['BOND']['SELL'] + offering['BOND']['PENDING_SELL'] < 10 + portfolio['BOND']:
             print("(FS) Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
-            sell(exchange, "BOND", 1001, 100 + portfolio['BOND'] -
+            sell(exchange, "BOND", 1001, 10 + portfolio['BOND'] -
                  offering['BOND']['SELL'] - offering['BOND']['PENDING_SELL'])
             # print("AFTER FS Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
-        if offering['BOND']['BUY'] + offering['BOND']['PENDING_BUY'] < 100 - portfolio['BOND']:
+        if offering['BOND']['BUY'] + offering['BOND']['PENDING_BUY'] < 10 - portfolio['BOND']:
             print("(FB) Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
-            buy(exchange, "BOND", 999, 100 - portfolio['BOND'] -
+            buy(exchange, "BOND", 999, 10 - portfolio['BOND'] -
                 offering['BOND']['BUY'] - offering['BOND']['PENDING_BUY'])
             # print("AFTER FB Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
 
