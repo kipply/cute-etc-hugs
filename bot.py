@@ -102,6 +102,10 @@ def main():
             recent_book[symbol]['sell'] = next_message['sell']
             if next_message['symbol'] == "BOND":
                 flip_BOND(exchange)
+            if next_message['symbol'] == "VALBZ":
+                for trad in trades:
+                    if trad['symbol'] == "VALE" && trad['dir'] == "BUY" && trad['status'] == "ACK" && trad['price'] >= next_message['sell'][0][0]:
+
         elif next_message['type'] == "ack":
             trades[next_message['order_id']]['status'] = "ACK"
         elif next_message['type'] == "fill":
@@ -118,7 +122,6 @@ def main():
         elif next_message['type'] == "error":
             print(next_message)
         elif next_message['type'] == "trade":
-            # Don't need to do anything
             pass
         #
         # TODO: Handle server dying and restart
@@ -143,7 +146,8 @@ def buy(exchange, name, price, size):
         'size': size,
         'status': 'SENT',
         'dir': 'BUY',
-        'fills': []
+        'fills': [],
+        'order_id': ID()
     })
 
 
@@ -174,6 +178,35 @@ def flip_BOND(exchange):
         if pair[0] > 1000:
             sell(exchange, "BOND", pair[0], pair[1])
 
+def adrArbitrage(exchange):
+    print("adrArbitrage")
+    sellEstimate = recent_book["VALBZ"]['sell'][0]
+    volume = sellEstimate[1]
+    for pair in recent_book["VALE"]['buy']:
+        if pair[0] > sellEstimate[0] && volume > 0:
+            sell(exchange, "VALE", pair[0], min(pair[1], volume))
+            buy(exchange, "VALBZ", sellEstimate[0], min(pair[1], volume))
+            convert(exchange, "VALE", "BUY", min(pair[1], volume))
+            volume -= min(pair[1], volume)
+    if recent_book["VALE"]['sell'][0] > sellEstimate[0]:
+        sell(exchange, "VALE", sellEstimate[0], 2)
+
+
+
+    buyEstimate = recent_book["VALBZ"]['buy'][0]
+    volumeBuy= buyEstimate[1]
+    for pair in recent_book["VALE"]['sell']:
+        if pair[0] < buyEstimate[0] && volume > 0
+            buy(exchange, "VALE", pair[0], min(pair[1], volumeBuy))
+            sell(exchange, "VALBZ", buyEstimate[0], min(pair[1], volumeBuy))
+            volumeBuy -= min(pair[1], volumeBuy)
+    if recent_book["VALE"]['buy'][0] < buyEstimate[0]:
+        buy(exchange, "VALE", buyEstimate[0], 2)
+
+
+#def adrPenny(exchange):
+    #print("adrPenny")
+    #for
 
 if __name__ == "__main__":
     main()
