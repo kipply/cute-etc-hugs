@@ -49,41 +49,31 @@ def read_from_exchange(exchange):
 
 # ~~~~~============== MAIN LOOP ==============~~~~~
 
-portfolio = {
-    "BOND": 0,
-    "VALBZ": 0,
-    "VALE": 0,
-    "GS": 0,
-    "MS": 0,
-    "WFC": 0,
-    "XLF": 0,
+positions = {
+    u'BOND': 0,
+    u'VALBZ': 0,
+    u'VALE': 0,
+    u'GS': 0,
+    u'MS': 0,
+    u'WFC': 0,
+    u'XLF': 0,
 }
+recent_book = {
+    u'BOND': {},
+    u'VALBZ': {},
+    u'VALE': {},
+    u'GS': {},
+    u'MS': {},
+    u'WFC': {},
+    u'XLF': {},
+}
+trades = []
 
 def ID():
     return len(trades)
 
 def main():
     exchange = connect()
-
-    positions = {
-        u'BOND': 0,
-        u'VALBZ': 0,
-        u'VALE': 0,
-        u'GS': 0,
-        u'MS': 0,
-        u'WFC': 0,
-        u'XLF': 0,
-    }
-    recent_book = {
-        u'BOND': {},
-        u'VALBZ': {},
-        u'VALE': {},
-        u'GS': {},
-        u'MS': {},
-        u'WFC': {},
-        u'XLF': {},
-    }
-    trades = []
     
     write_to_exchange(exchange, {"type": "hello", "team": team_name.upper()})
     hello_from_exchange = read_from_exchange(exchange)
@@ -103,6 +93,8 @@ def main():
             recent_book[symbol]['sell'] = next_message['sell']
             if next_message['symbol'] == "BOND":
                 flip_BOND(exchange)
+            if next_message['symbol'] == "VALBZ" or next_message['symbol'] == "VALE":
+                adrArbitrage(exchange, recent_book)
             if next_message['symbol'] == "VALBZ":
                 for id, trad in enumerate(trades):
                     if trad['symbol'] == "VALE" and trad['status'] == "ACK":
@@ -215,11 +207,8 @@ def adrArbitrage(exchange):
     if recent_book["VALE"]['sell'][0] > sellEstimate[0]:
         sell(exchange, "VALE", sellEstimate[0], 2)
 
-
-
-
     buyEstimate = recent_book["VALBZ"]['buy'][0]
-    volumeBuy= buyEstimate[1]
+    volumeBuy = buyEstimate[1]
     for pair in recent_book["VALE"]['sell']:
         if pair[0] < buyEstimate[0] and volume > 0:
             buy(exchange, "VALE", pair[0], min(pair[1], volumeBuy))
