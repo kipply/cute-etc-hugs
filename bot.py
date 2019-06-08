@@ -121,9 +121,9 @@ def main():
             symbol = next_message['symbol']
             recent_book[symbol]['buy'] = next_message['buy']
             recent_book[symbol]['sell'] = next_message['sell']
-            # if next_message['symbol'] == "BOND":
-                # flip_BOND(exchange)
-            # etf_arbitrage(exchange)
+            if next_message['symbol'] == "BOND":
+              flip_BOND(exchange)
+            etf_arbitrage(exchange)
         elif next_message['type'] == "ack":
             # print("BEFORE ACK: Offering[BOND]:", offering['BOND'])
             offer = trades[next_message['order_id']]
@@ -352,6 +352,94 @@ def removeOpenOrder(exchange):
         elif trades[i]['size'] == minSize and i > besti:
             besti = i
     write_to_exchange(exchange, {"type": "cancel", "order_id": i})
+
+
+
+def convert(exchange, name, dir, size):
+    print("trying_to_convert", name, dir, size)
+    write_to_exchange(exchange, {
+        'type': 'convert',
+        'order_id': ID(),
+        'symbol': name,
+        'dir': dir,
+        'size': size
+    })
+    trades.append({
+        'type': 'convert',
+                'symbol': name,
+                'price': 0,
+                'size': size,
+                'status': 'SENT',
+                'dir': 'CONVERT',
+                'fills': []
+    })
+
+
+def etf_arbitrage(exchange):
+  xlf_sell_estimate = 0
+  temp = count = volume = 0
+  try: 
+    for share in recent_book['XLF']['sell']:
+      xlf_sell_estimate += share[0] * share[1]
+      temp += share[1]
+      count += 1
+      if count >= 1:
+        break
+    volume  = min(temp, 10)
+    xlf_sell_estimate /= float(temp)
+
+    est_bond = temp = count = 0
+    for share in recent_book['BOND']['buy']:
+      est_bond += share[0] * share[1]
+      temp += share[1]
+      count += 1
+      if count >= 1:
+        break
+    est_bond /= float(temp)
+
+    est_gs = temp = count = 0
+    for share in recent_book['GS']['buy']:
+      est_gs += share[0] * share[1]
+      temp += share[1]
+      count += 1
+      if count >= 1:
+        break
+    est_gs /= float(temp)
+
+    est_ms = temp = count = 0
+    for share in recent_book['MS']['buy']:
+      est_ms += share[0] * share[1]
+      temp += share[1]
+      count += 1
+      if count >= 1:
+        break
+    est_ms /= float(temp)
+
+    est_wfc = temp = count = 0
+    for share in recent_book['WFC']['buy']:
+      est_wfc += share[0] * share[1]
+      temp += share[1]
+      count += 1
+      if count >= 1:
+        break
+    est_wfc /= float(temp)
+
+  except Exception as e: 
+    return
+  xlf_buy_est = (2 * est_wfc + 3 * est_ms + 2 * est_gs + 3 * est_bond) / 10.0
+
+  print(xlf_buy_est, xlf_sell_estimate)
+
+  if xlf_buy_est > xlf_sell_estimate: 
+    buy(exchange, "XLF", int(round(xlf_sell_estimate)), volume)
+  if 10 * xlf_buy_est - 100 > xlf_sell_estimate * 10 and portfolio["XLF"] >= 10: 
+    convert(exchange, "XLF", "SELL", portfolio["XLF"] // 10)
+    sell(exchange, "BOND", int(round(est_bond)), portfolio["XLF"] // 10 * 3)
+    sell(exchange, "GS", int(round(est_gs)), portfolio["XLF"] // 10 * 2)
+    sell(exchange, "MS", int(round(est_ms)), portfolio["XLF"] // 10 * 3)
+    sell(exchange, "WFC", int(round(est_wfc)), portfolio["XLF"] // 10 * 2)
+    print("MADE ETF TRADE FOR 10")
+
 
 if __name__ == "__main__":
     main()
