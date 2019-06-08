@@ -41,8 +41,6 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 # ~~~~~============== NETWORKING CODE ==============~~~~~
-
-
 def connect():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -64,7 +62,6 @@ def read_from_exchange(exchange):
 def ID():
     return len(trades)
 
-
 portfolio = {
     u'BOND': 0,
     u'VALBZ': 0,
@@ -83,23 +80,9 @@ recent_book = {
     u'WFC': {},
     u'XLF': {},
 }
-offering = {
-    u'BOND': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
-    u'VALBZ': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
-    u'VALE': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
-    u'GS': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
-    u'MS': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
-    u'WFC': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
-    u'XLF': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
-}
 trades = []
 
-
 def main():
-    global portfolio
-    global recent_book
-    global offering
-    global trades
     exchange = connect()
     write_to_exchange(exchange, {"type": "hello", "team": team_name.upper()})
     hello_from_exchange = read_from_exchange(exchange)
@@ -108,12 +91,9 @@ def main():
     # Since many write messages generate marketdata, this will cause an
     # exponential explosion in pending messages. Please, don't do that!
     print("The exchange replied:", hello_from_exchange, file=sys.stderr)
-    for pair in hello_from_exchange['symbols']:
-        portfolio[pair['symbol']] = pair['position']
 
     while True:
         next_message = read_from_exchange(exchange)
-        # print("\nNext message = ", next_message, "\n")
         extra_log.write(str(next_message))
         if next_message['type'] == "book":
             symbol = next_message['symbol']
@@ -122,38 +102,23 @@ def main():
             if next_message['symbol'] == "BOND":
                 flip_BOND(exchange)
         elif next_message['type'] == "ack":
-            # print("BEFORE ACK: Offering[BOND]:", offering['BOND'])
-            offer = trades[next_message['order_id']]
-            offer['status'] = "ACK"
-            offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
-            offering[offer['symbol']][offer['dir']] += offer['size']
-            print("ACK:", offer['dir'], offer['price'], offer['size'])
-            print("Offering[BOND]:", offering['BOND'])
-
+            trades[next_message['order_id']]['status'] = "ACK"
+            print("ACK")
         elif next_message['type'] == "fill":
-            offer = trades[next_message['order_id']]
-            offer['fills'].append(next_message)
+            order_id = next_message['order_id']
+            trades[order_id]['fills'].append(next_message)
             if next_message['dir'] == "BUY":
-                portfolio[offer['symbol']] += next_message["size"]
+                portfolio[symbol] += next_message["size"]
             elif next_message['dir'] == "SELL":
-                portfolio[offer['symbol']] -= next_message["size"]
-            offering[offer['symbol']][offer['dir']] -= next_message['size']
-            print("Filled")
+                portfolio[symbol] -= next_message["size"]
             print(next_message)
-            print("Offering[BOND]:", offering['BOND'])
-
         elif next_message['type'] == "out":
             trades[next_message['order_id']]['status'] = "OUT"
-            print(bcolors.WARNING + "OUT" + bcolors.ENDC)
+            print(bcolours.WARNING + "OUT" + bcolors.ENDC)
         elif next_message['type'] == "reject":
-            offer = trades[next_message['order_id']]
-            offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
-            print("Rejected:", offer['dir'], offer['price'], offer['size'], "Reason:", next_message['error'])
-            # print("AFTER Reject: Offering:", offering['BOND'])
-            if next_message['error'] == "ADD_RATE":
-                break
+            print(bcolours.WARNING + next_message + bcolors.ENDC)
         elif next_message['type'] == "error":
-            print("Trade error!")
+            print(next_message)
         elif next_message['type'] == "trade":
             # Don't need to do anything
             pass
@@ -178,26 +143,14 @@ def main():
                 u'XLF': {},
             }
             trades = []
-            print(bcolors.FAIL + "RESET!!!!!!!!" + bcolors.ENDC)
+            print(bcolours.FAIL + "RESET!!!!!!!!" + bcolors.ENDC)
         #
         # TODO: Handle server dying and restart
 
-        if offering['BOND']['SELL'] + offering['BOND']['PENDING_SELL'] < 100 + portfolio['BOND']:
-            print("(FS) Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
-            sell(exchange, "BOND", 1001, 100 + portfolio['BOND'] -
-                 offering['BOND']['SELL'] - offering['BOND']['PENDING_SELL'])
-            # print("AFTER FS Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
-        if offering['BOND']['BUY'] + offering['BOND']['PENDING_BUY'] < 100 - portfolio['BOND']:
-            print("(FB) Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
-            buy(exchange, "BOND", 999, 100 - portfolio['BOND'] -
-                offering['BOND']['BUY'] - offering['BOND']['PENDING_BUY'])
-            # print("AFTER FB Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
 
-        # TODO: Handle server dying and restart
 
 
 def buy(exchange, name, price, size):
-    print("trying to buy", name, price, size)
     write_to_exchange(exchange, {
         'type': 'add',
         'order_id': ID(),
@@ -214,11 +167,9 @@ def buy(exchange, name, price, size):
         'dir': 'BUY',
         'fills': []
     })
-    offering[name]['PENDING_BUY'] += size
 
 
 def sell(exchange, name, price, size):
-    print("trying to sell", name, price, size)
     write_to_exchange(exchange, {
         'type': 'add',
         'order_id': ID(),
@@ -235,17 +186,14 @@ def sell(exchange, name, price, size):
         'dir': 'SELL',
         'fills': []
     })
-    offering[name]['PENDING_SELL'] += size
-
 
 def flip_BOND(exchange):
-    return
-    # for pair in recent_book['BOND']['sell']:
-    #     if pair[0] < 1000:
-    #         buy(exchange, "BOND", pair[0], pair[1])
-    # for pair in recent_book['BOND']['buy']:
-    #     if pair[0] > 1000:
-    #         sell(exchange, "BOND", pair[0], pair[1])
+    for pair in recent_book['BOND']['sell']:
+        if pair[0] < 1000:
+            buy(exchange, "BOND", pair[0], pair[1])
+    for pair in recent_book['BOND']['buy']:
+        if pair[0] > 1000:
+            sell(exchange, "BOND", pair[0], pair[1])
 
 
 if __name__ == "__main__":
