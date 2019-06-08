@@ -128,6 +128,7 @@ def main():
             if trades[next_message['order_id']]['symbol'] == "VALE" or trades[next_message['order_id']]['symbol'] == "VALBZ": 
               print(next_message, "OUT") 
         elif next_message['type'] == "reject":
+            print(recent_book)
             print(next_message)
         elif next_message['type'] == "error":
             print(next_message)
