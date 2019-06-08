@@ -229,7 +229,7 @@ def convert(exchange, name, dir, size):
 def etf_arbitrage(exchange):
   print("EEONTUDOTE HK")
   xlf_sell_estimate = 0
-  temp = count = 0
+  temp = count = volume = 0
   try: 
     for share in recent_book['XLF']['sell']:
       xlf_sell_estimate += share[0] * share[1]
@@ -237,6 +237,7 @@ def etf_arbitrage(exchange):
       count += 1
       if count >= 3:
         break
+    volume  = min(temp, 10)
     xlf_sell_estimate /= float(temp)
 
     est_bond = temp = count = 0
@@ -282,8 +283,8 @@ def etf_arbitrage(exchange):
 
   print(xlf_buy_est, xlf_sell_estimate)
 
-  if 10 * xlf_buy_est - 100 < xlf_sell_estimate * 10: 
-    buy(exchange, "XLF", int(round(xlf_sell_estimate)), 10)
+  if 10 * xlf_buy_est > xlf_sell_estimate * 10 - 100: 
+    buy(exchange, "XLF", volume, 10)
     convert(exchange, "XLF", "SELL", 10)
     sell(exchange, "BOND", round(est_bond), 3)
     sell(exchange, "GS", round(est_gs), 2)
