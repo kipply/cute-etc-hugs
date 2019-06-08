@@ -57,22 +57,22 @@ def ID():
 
 def reset_variables(): 
     positions = {
-        "BOND": 0,
-        "VALBZ": 0,
-        "VALE": 0,
-        "GS": 0,
-        "MS": 0,
-        "WFC": 0,
-        "XLF": 0, 
+        u"BOND": 0,
+        u"VALBZ": 0,
+        u"VALE": 0,
+        u"GS": 0,
+        u"MS": 0,
+        u"WFC": 0,
+        u"XLF": 0, 
     }
     recent_book = {
-        "BOND": {},
-        "VALBZ": {},
-        "VALE": {},
-        "GS": {},
-        "MS": {},
-        "WFC": {},
-        "XLF": {},
+        u"BOND": {},
+        u"VALBZ": {},
+        u"VALE": {},
+        u"GS": {},
+        u"MS": {},
+        u"WFC": {},
+        u"XLF": {},
     }
     trades = []
 
