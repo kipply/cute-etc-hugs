@@ -196,5 +196,46 @@ def flip_BOND(exchange):
             sell(exchange, "BOND", pair[0], pair[1])
 
 
+
+def etf_arbitrage(exchange):
+  xlf_sell_estimate = 0 
+  temp = 0 
+  for sell in recent_book['XLF']['sell']: 
+    xlf_sell_estimate += sell[0] * sell[1] 
+    temp += sell[1] 
+  xlf_sell_estimate /= float(temp) 
+
+  est_bond = 0 
+  temp = 0 
+  for sell in recent_book['BOND']['sell']: 
+    est_bond += sell[0] * sell[1] 
+    temp += sell[1] 
+  est_bond /= float(temp)
+  est_gs = 0 
+  temp = 0 
+  for sell in recent_book['GS']['sell']: 
+    est_gs += sell[0] * sell[1] 
+    temp += sell[1] 
+  est_gs /= float(temp)
+  est_ms = 0 
+  temp = 0 
+  for sell in recent_book['MS']['sell']: 
+    est_ms += sell[0] * sell[1] 
+    temp += sell[1] 
+  est_ms /= float(temp)
+  est_wfc = 0 
+  temp = 0 
+  for sell in recent_book['WCF']['sell']: 
+    est_wfc += sell[0] * sell[1] 
+    temp += sell[1] 
+  est_wfc /= float(temp)
+
+  xlf_buy_est = (2 * est_wfc + 3 * est_ms + 2 * est_gs + 3 * est_bond) / 10.0
+
+
+#  if xlf_buy_est - 100 > xlf_sell_estimate: 
+#git    buy(exchange, "XLF", int(round(xlf_sell_estimate)), )
+
+
 if __name__ == "__main__":
     main()
