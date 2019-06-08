@@ -13,7 +13,7 @@ import json
 
 # ~~~~~============== CONFIGURATION  ==============~~~~~
 # replace REPLACEME with your team name!
-team_name="TEAMLOWRY"
+team_name = "TEAMLOWRY"
 # This variable dictates whether or not the bot is connecting to the prod
 # or test exchange. Be careful with this switch!
 test_mode = True
@@ -22,8 +22,8 @@ test_mode = True
 # 0 is prod-like
 # 1 is slower
 # 2 is empty
-test_exchange_index=2
-prod_exchange_hostname="production"
+test_exchange_index = 2
+prod_exchange_hostname = "production"
 
 port = 25000 + (test_exchange_index if test_mode else 0)
 exchange_hostname = "test-exch-" + team_name if test_mode else prod_exchange_hostname
@@ -36,9 +36,11 @@ def connect():
     s.connect((exchange_hostname, port))
     return s.makefile('rw', 1)
 
+
 def write_to_exchange(exchange, obj):
     json.dump(obj, exchange)
     exchange.write("\n")
+
 
 def read_from_exchange(exchange):
     return json.loads(exchange.readline())
@@ -55,6 +57,9 @@ recent_book = {
     "XLF": {},
 }
 
+ID = 0
+
+
 def main():
     exchange = connect()
     write_to_exchange(exchange, {"type": "hello", "team": team_name.upper()})
@@ -65,19 +70,27 @@ def main():
     # exponential explosion in pending messages. Please, don't do that!
     print("The exchange replied:", hello_from_exchange, file=sys.stderr)
 
-    while True: 
+    while True:
         next_message = read_from_exchange(exchange)
-        if next_message['type'] == "book": 
+        if next_message['type'] == "book":
             symbol = next_message['symbol']
             recent_book[symbol]['buy'] = next_message['buy']
             recent_book[symbol]['sell'] = next_message['sell']
-        if next_message['type'] == "trade": 
-            pass 
-        else: 
-            flip_BOND()
+        if next_message['type'] == "trade":
+            pass
+        flip_BOND(exchange)
 
-def flip_BOND(): 
-    pass
+
+def flip_BOND(exchange):
+    # total = 0
+    for i in len(recent_book['BOND']['sell']):
+        if recent_book['BOND']['sell'][i][0] < 1000:
+            # total += recent_book['BOND']['sell'][i][1]
+            ID += 1
+            write_to_exchange(exchange, {"type": "add", "order_id": ID, "symbol": "BOND", "dir": "BUY",
+                                         "price": recent_book['BOND']['sell'][i][0],
+                                         "size": recent_book['BOND']['sell'][i][1]})
+
 
 if __name__ == "__main__":
     main()
