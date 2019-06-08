@@ -100,7 +100,7 @@ def main():
     global recent_book
     global offering
     global trades
-    
+
     exchange = connect()
 
     write_to_exchange(exchange, {"type": "hello", "team": team_name.upper()})
@@ -169,7 +169,7 @@ def main():
             if trades[next_message['order_id']]['symbol'] == "VALE" or trades[next_message['order_id']]['symbol'] == "VALBZ":
               print(next_message, "OUT")
             trades[next_message['order_id']]['status'] = "OUT"
-            print(bcolours.WARNING + "OUT" + bcolors.ENDC)
+            print(bcolors.WARNING + "OUT" + bcolors.ENDC)
         elif next_message['type'] == "reject":
             print(trades[next_message['order_id']])
             print(next_message)
