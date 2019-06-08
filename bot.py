@@ -147,7 +147,8 @@ def main():
         elif next_message['type'] == "out":
             trades[next_message['order_id']]['status'] = "OUT"
             print(bcolors.WARNING + "OUT" + bcolors.ENDC)
-            open_orders.remove(next_message['order_id'])
+            if next_message['order_id'] in open_orders:
+                open_orders.remove(next_message['order_id'])
         elif next_message['type'] == "reject":
             offer = trades[next_message['order_id']]
             offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
