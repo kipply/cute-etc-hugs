@@ -266,7 +266,6 @@ def removeOpenOrder(exchange):
             besti = i
         elif trades[i]['size'] == minSize and i > besti:
             besti = i
-    open_orders.remove(i)
     write_to_exchange(exchange, {"type": "cancel", "order_id": i})
 
 if __name__ == "__main__":
