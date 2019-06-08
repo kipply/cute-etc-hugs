@@ -220,10 +220,10 @@ def main():
             #         if portfolio["VALE"] < -8:
             #             print ("REEEEEEEEE!")
             #             convert(exchange, "VALE", 'BUY', 12)
-            portfolio[offer['symbol']] -= next_message["size"]
+            #portfolio[offer['symbol']] -= next_message["size"]
             offering[offer['symbol']][offer['dir']] -= next_message['size']
             filledID.append(next_message['order_id'])
-            #trades[next_message['order_id']]['size'] -= next_message['size']
+            trades[next_message['order_id']]['size'] -= next_message['size']
             print("Filled")
             print(next_message)
             # print("Offering[BOND]:", offering['BOND'])
