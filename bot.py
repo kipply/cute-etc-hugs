@@ -137,7 +137,7 @@ def main():
 
         elif next_message['type'] == "out":
             trades[next_message['order_id']]['status'] = "OUT"
-            print(bcolours.WARNING + "OUT" + bcolors.ENDC)
+            print(bcolors.WARNING + "OUT" + bcolors.ENDC)
         elif next_message['type'] == "reject":
             offer = trades[next_message['order_id']]
             offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
@@ -168,7 +168,7 @@ def main():
                 u'XLF': {},
             }
             trades = []
-            print(bcolours.FAIL + "RESET!!!!!!!!" + bcolors.ENDC)
+            print(bcolors.FAIL + "RESET!!!!!!!!" + bcolors.ENDC)
         #
         # TODO: Handle server dying and restart
 
