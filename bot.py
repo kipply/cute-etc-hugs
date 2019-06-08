@@ -85,6 +85,15 @@ recent_book = {
     u'WFC': {},
     u'XLF': {},
 }
+offering = {
+    u'BOND': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
+    u'VALBZ': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
+    u'VALE': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
+    u'GS': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
+    u'MS': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
+    u'WFC': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
+    u'XLF': {'BUY': 0, 'SELL': 0, 'PENDING_BUY': 0, 'PENDING_SELL': 0},
+}
 trades = []
 open_orders = set()
 
@@ -123,12 +132,13 @@ def main():
             print("Offering[BOND]:", offering['BOND'])
             open_orders.add(next_message['order_id'])
         elif next_message['type'] == "fill":
-            order_id = next_message['order_id']
-            trades[order_id]['fills'].append(next_message)
+            offer = trades[next_message['order_id']]
+            offer['fills'].append(next_message)
             if next_message['dir'] == "BUY":
-                portfolio[symbol] += next_message["size"]
+                portfolio[offer['symbol']] += next_message["size"]
             elif next_message['dir'] == "SELL":
-                portfolio[symbol] -= next_message["size"]
+                portfolio[offer['symbol']] -= next_message["size"]
+            offering[offer['symbol']][offer['dir']] -= next_message['size']
             print(next_message)
         elif next_message['type'] == "out":
             trades[next_message['order_id']]['status'] = "OUT"
@@ -171,6 +181,18 @@ def main():
             }
             trades = []
             print(bcolors.FAIL + "RESET!!!!!!!!" + bcolors.ENDC)
+
+        if offering['BOND']['SELL'] + offering['BOND']['PENDING_SELL'] < 100 + portfolio['BOND']:
+            print("(FS) Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
+            sell(exchange, "BOND", 1001, 100 + portfolio['BOND'] -
+                 offering['BOND']['SELL'] - offering['BOND']['PENDING_SELL'])
+            # print("AFTER FS Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
+        if offering['BOND']['BUY'] + offering['BOND']['PENDING_BUY'] < 100 - portfolio['BOND']:
+            print("(FB) Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
+            buy(exchange, "BOND", 999, 100 - portfolio['BOND'] -
+                offering['BOND']['BUY'] - offering['BOND']['PENDING_BUY'])
+            # print("AFTER FB Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
+
         #
         # TODO: Handle server dying and restart
 
@@ -195,6 +217,7 @@ def buy(exchange, name, price, size):
         'dir': 'BUY',
         'fills': []
     })
+    offering[name]['PENDING_BUY'] += size
 
 
 def sell(exchange, name, price, size):
@@ -217,15 +240,17 @@ def sell(exchange, name, price, size):
         'dir': 'SELL',
         'fills': []
     })
+    offering[name]['PENDING_SELL'] += size
 
 
 def flip_BOND(exchange):
-    for pair in recent_book['BOND']['sell']:
-        if pair[0] < 1000:
-            buy(exchange, "BOND", pair[0], pair[1])
-    for pair in recent_book['BOND']['buy']:
-        if pair[0] > 1000:
-            sell(exchange, "BOND", pair[0], pair[1])
+	return
+    # for pair in recent_book['BOND']['sell']:
+    #     if pair[0] < 1000:
+    #         buy(exchange, "BOND", pair[0], pair[1])
+    # for pair in recent_book['BOND']['buy']:
+    #     if pair[0] > 1000:
+    #         sell(exchange, "BOND", pair[0], pair[1])
 
 
 def convert(exchange, name, dir, size):
