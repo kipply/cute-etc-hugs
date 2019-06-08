@@ -105,10 +105,10 @@ def main():
                 flip_BOND(exchange)
             if next_message['symbol'] == "VALBZ":
                 for id, trad in enumerate(trades):
-                    if trad['symbol'] == "VALE" && trad['status'] == "ACK":
-                        if trad['dir'] == "BUY" && trad['price'] >= next_message['sell'][0][0]:
+                    if trad['symbol'] == "VALE" and trad['status'] == "ACK":
+                        if trad['dir'] == "BUY" and trad['price'] >= next_message['sell'][0][0]:
                             cancel(id)
-                        elif trad['dir'] == "SELL" && trad['price'] <= next_message['buy'][0][0]:
+                        elif trad['dir'] == "SELL" and trad['price'] <= next_message['buy'][0][0]:
                             cancel(id)
 
         elif next_message['type'] == "ack":
