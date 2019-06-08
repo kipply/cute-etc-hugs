@@ -124,9 +124,9 @@ def main():
             print(next_message)
         elif next_message['type'] == "out":
             trades[next_message['order_id']]['status'] = "OUT"
-            print(bcolours.WARNING + "OUT" + bcolors.ENDC)
+            print(bcolors.WARNING + "OUT" + bcolors.ENDC)
         elif next_message['type'] == "reject":
-            print(bcolours.WARNING + next_message + bcolors.ENDC)
+            print(bcolors.WARNING + next_message + bcolors.ENDC)
         elif next_message['type'] == "error":
             print(next_message)
         elif next_message['type'] == "trade":
@@ -153,7 +153,7 @@ def main():
                 u'XLF': {},
             }
             trades = []
-            print(bcolours.FAIL + "RESET!!!!!!!!" + bcolors.ENDC)
+            print(bcolors.FAIL + "RESET!!!!!!!!" + bcolors.ENDC)
         #
         # TODO: Handle server dying and restart
 
@@ -273,7 +273,6 @@ def etf_arbitrage(exchange):
 	est_wfc /= float(temp)
 
   xlf_buy_est = (2 * est_wfc + 3 * est_ms + 2 * est_gs + 3 * est_bond) / 10.0
-
 
   if 10 * xlf_buy_est - 100 > xlf_sell_estimate * 10: 
     buy(exchange, "XLF", int(round(xlf_sell_estimate)), 10)
