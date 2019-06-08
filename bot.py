@@ -10,6 +10,7 @@ from __future__ import print_function
 import sys
 import socket
 import json
+import time
 
 # ~~~~~============== CONFIGURATION  ==============~~~~~
 # replace REPLACEME with your team name!
@@ -85,7 +86,7 @@ recent_book = {
     u'XLF': {},
 }
 trades = []
-
+open_orders = set()
 
 def main():
     global portfolio
@@ -113,8 +114,14 @@ def main():
                 # flip_BOND(exchange)
             etf_arbitrage(exchange)
         elif next_message['type'] == "ack":
-            trades[next_message['order_id']]['status'] = "ACK"
-            print("ACK")
+            # print("BEFORE ACK: Offering[BOND]:", offering['BOND'])
+            offer = trades[next_message['order_id']]
+            offer['status'] = "ACK"
+            offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
+            offering[offer['symbol']][offer['dir']] += offer['size']
+            print("ACK:", offer['dir'], offer['price'], offer['size'])
+            print("Offering[BOND]:", offering['BOND'])
+            open_orders.add(next_message['order_id'])
         elif next_message['type'] == "fill":
             order_id = next_message['order_id']
             trades[order_id]['fills'].append(next_message)
@@ -126,12 +133,21 @@ def main():
         elif next_message['type'] == "out":
             trades[next_message['order_id']]['status'] = "OUT"
             print(bcolors.WARNING + "OUT" + bcolors.ENDC)
+            if next_message['order_id'] in open_orders:
+                open_orders.remove(next_message['order_id'])
         elif next_message['type'] == "reject":
-            print(next_message)
+            offer = trades[next_message['order_id']]
+            offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
+            print("Rejected:", offer['dir'], offer['price'], offer['size'], "Reason:", next_message['error'])
+            # print("AFTER Reject: Offering:", offering['BOND'])
+            if next_message['error'] == "LIMIT:OPEN_ORDERS":
+                removeOpenOrder(exchange)
+            if next_message['error'] == "LIMIT:ADD_RATE" or next_message['error'] == "TRADING_CLOSED":
+                time.sleep(0.1)
         elif next_message['type'] == "error":
             print(next_message)
         elif next_message['type'] == "trade":
-            # Don't need to do anything
+            # Don't need to do anything 
             pass
         elif next_message['type'] == "close":
             # reset everything
@@ -160,6 +176,9 @@ def main():
 
 
 def buy(exchange, name, price, size):
+    print("trying to buy", name, price, size)
+    if len(open_orders) > 95:
+        removeOpenOrder(exchange)
     write_to_exchange(exchange, {
         'type': 'add',
         'order_id': ID(),
@@ -179,6 +198,9 @@ def buy(exchange, name, price, size):
 
 
 def sell(exchange, name, price, size):
+    print("trying to sell", name, price, size)
+    if len(open_orders) > 95:
+        removeOpenOrder(exchange)
     write_to_exchange(exchange, {
         'type': 'add',
         'order_id': ID(),
@@ -293,6 +315,16 @@ def etf_arbitrage(exchange):
     sell(exchange, "WFC", int(round(est_wfc)), 2)
     print("MADE ETF TRADE FOR 10")
 
+def removeOpenOrder(exchange):
+    minSize = 1000
+    besti = -1
+    for i in open_orders:
+        if trades[i]['size'] < minSize:
+            minSize = trades[i]['size']
+            besti = i
+        elif trades[i]['size'] == minSize and i > besti:
+            besti = i
+    write_to_exchange(exchange, {"type": "cancel", "order_id": i})
 
 if __name__ == "__main__":
     main()
