@@ -111,7 +111,9 @@ def main():
     # Since many write messages generate marketdata, this will cause an
     # exponential explosion in pending messages. Please, don't do that!
     print("The exchange replied:", hello_from_exchange, file=sys.stderr)
-
+    for pair in hello_from_exchange['symbols']:
+        portfolio[pair['symbol']] = pair['position']
+		
     while True:
         next_message = read_from_exchange(exchange)
         extra_log.write(str(next_message))
