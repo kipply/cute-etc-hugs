@@ -22,7 +22,7 @@ test_mode = True
 # 0 is prod-like
 # 1 is slower
 # 2 is empty
-test_exchange_index = 2
+test_exchange_index = 0
 prod_exchange_hostname = "production"
 
 port = 25000 + (test_exchange_index if test_mode else 0)
@@ -46,6 +46,7 @@ def read_from_exchange(exchange):
     return json.loads(exchange.readline())
 
 
+
 # ~~~~~============== MAIN LOOP ==============~~~~~
 recent_book = {
     "BOND": {},
@@ -57,7 +58,19 @@ recent_book = {
     "XLF": {},
 }
 
+<<<<<<< HEAD
 trades = []
+=======
+ID = 0
+positions = {
+    "BOND": 0,
+    "VALBZ": 0,
+    "VALE": 0,
+    "GS": 0,
+    "MS": 0,
+    "WFC": 0,
+    "XLF": 0, 
+}
 
 def ID(): 
     return len(trades)
@@ -94,18 +107,21 @@ def main():
         elif next_message['type'] == "trade":
             # Don't need to do anything
             pass
+        print("In while loop")
 
 
 def flip_BOND(exchange):
-    # total = 0
-    for i in range(len(recent_book['BOND']['sell'])):
-        if recent_book['BOND']['sell'][i][0] < 1000:
-            # total += recent_book['BOND']['sell'][i][1]
-
-            write_to_exchange(exchange, {"type": "add", "order_id": ID, "symbol": "BOND", "dir": "BUY",
-                                         "price": recent_book['BOND']['sell'][i][0],
-                                         "size": recent_book['BOND']['sell'][i][1]})
-
+    print("flipping bond")
+    for pair in recent_book['BOND']['sell']:
+        if pair[0] < 1000:
+            ID += 1
+            write_to_exchange(exchange, {'type': 'add', 'order_id': ID, 'symbol': 'BOND', 'dir': 'BUY',
+                                         'price': pair[0], 'size': pair[1]})
+    for pair in recent_book['BOND']['buy']:
+        if pair[0] > 1000:
+            ID += 1
+            write_to_exchange(exchange, {'type': 'add', 'order_id': ID, 'symbol': 'BOND', 'dir': 'SELL',
+                                         'price': pair[0], 'size': pair[1]})
 
 if __name__ == "__main__":
     main()
