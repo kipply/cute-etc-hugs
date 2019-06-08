@@ -86,14 +86,15 @@ def main():
             symbol = next_message['symbol']
             recent_book[symbol]['buy'] = next_message['buy']
             recent_book[symbol]['sell'] = next_message['sell']
+            if next_message['symbol'] == "BOND":
+                flip_BOND(exchange)
         if next_message['type'] == "trade":
             pass
-        flip_BOND(exchange)
 
 
 def flip_BOND(exchange):
     # total = 0
-    for i in len(recent_book['BOND']['sell']):
+    for i in range(len(recent_book['BOND']['sell'])):
         if recent_book['BOND']['sell'][i][0] < 1000:
             # total += recent_book['BOND']['sell'][i][1]
             ID += 1
