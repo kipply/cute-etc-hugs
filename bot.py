@@ -57,8 +57,10 @@ recent_book = {
     "XLF": {},
 }
 
-ID = 0
+trades = []
 
+def ID(): 
+    return len(trades)
 
 def main():
     exchange = connect()
