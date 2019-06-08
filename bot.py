@@ -185,18 +185,18 @@ def main():
                 portfolio[offer['symbol']] += next_message["size"]
             elif next_message['dir'] == "SELL":
                 portfolio[offer['symbol']] -= next_message["size"]
-            if symbol == "VALE":
-                #close position
-                oben = portfolio["VALE"] + portfolio["VALBZ"]
-                if(oben > 0):
-                    sell(exchange, "VALBZ", recent_book["VALBZ"]['buy'][0][0], oben)
-                    if portfolio["VALE"] > 8:
-                        convert(exchange, "VALE", 'SELL', 12)
-                if(oben < 0):
-                    buy(exchange, "VALBZ", recent_book["VALBZ"]['sell'][0][0], -oben)
-                    if portfolio["VALE"] < -8:
-                        print ("REEEEEEEEE!")
-                        convert(exchange, "VALE", 'BUY', 12)
+            # if symbol == "VALE":
+            #     #close position
+            #     oben = portfolio["VALE"] + portfolio["VALBZ"]
+            #     if(oben > 0):
+            #         sell(exchange, "VALBZ", recent_book["VALBZ"]['buy'][0][0], oben)
+            #         if portfolio["VALE"] > 8:
+            #             convert(exchange, "VALE", 'SELL', 12)
+            #     if(oben < 0):
+            #         buy(exchange, "VALBZ", recent_book["VALBZ"]['sell'][0][0], -oben)
+            #         if portfolio["VALE"] < -8:
+            #             print ("REEEEEEEEE!")
+            #             convert(exchange, "VALE", 'BUY', 12)
             portfolio[offer['symbol']] -= next_message["size"]
             offering[offer['symbol']][offer['dir']] -= next_message['size']
             print("Filled")
