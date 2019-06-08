@@ -113,7 +113,6 @@ def main():
         #
         # TODO: Handle server dying and restart
         #
-        print("In while loop")
 
 
 
