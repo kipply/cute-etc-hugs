@@ -183,6 +183,7 @@ def sell(exchange, name, price, size):
         'dir': 'SELL',
         'fills': []
     })
+
 def convert(exchange, name, dir, size)：
     write_to_exchange(exchange, {
         'type': 'convert',
@@ -190,6 +191,15 @@ def convert(exchange, name, dir, size)：
         'symbol' : name,
         'dir' : dir,
         'size' : size
+    })
+    trades.append({
+        'type': 'convert'
+    })
+
+def cancel(exchange, ID):
+    write_to_exchange(exchange, {
+        'type': 'cancel',
+        'order_id': ID
     })
 
 def flip_BOND(exchange):
