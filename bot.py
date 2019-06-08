@@ -65,11 +65,19 @@ def main():
     # exponential explosion in pending messages. Please, don't do that!
     print("The exchange replied:", hello_from_exchange, file=sys.stderr)
 
-    next_message = read_from_exchange(exchange)
-    if next_message['type'] == "book": 
-        symbol = next_message['symbol']
-        recent_book[symbol]['buy'] = next_message['buy']
-        recent_book[symbol]['sell'] = next_message['sell']
+    while True: 
+        next_message = read_from_exchange(exchange)
+        if next_message['type'] == "book": 
+            symbol = next_message['symbol']
+            recent_book[symbol]['buy'] = next_message['buy']
+            recent_book[symbol]['sell'] = next_message['sell']
+        if next_message['type'] == "trade": 
+            pass 
+        else: 
+            flip_BOND()
+
+def flip_BOND(): 
+    pass
 
 if __name__ == "__main__":
     main()
