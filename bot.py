@@ -274,7 +274,7 @@ def convert(exchange, name, dir, size):
 
 
 def etf_arbitrage(exchange):
-  print("EEONTUDOTE HK")
+#   print("EEONTUDOTE HK")
   xlf_sell_estimate = 0
   temp = count = volume = 0
   try: 
