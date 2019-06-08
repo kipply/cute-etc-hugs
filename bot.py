@@ -115,11 +115,9 @@ def main():
 
     oben = portfolio["VALE"] - portfolio["VALBZ"]
     if(oben > 0):
-        sell(exchange, "VALBZ", recent_book["VALBZ"]['buy'][0], oben)
         if portfolio["VALE"] > 4:
             convert(exchange, "VALE", 'SELL', portfolio["VALE"])
     if(oben < 0):
-        sell(exchange, "VALBZ", recent_book["VALBZ"]['sell'][0], -oben)
         if portfolio["VALE"] < -4:
             print ("REEEEEEEEE!")
             convert(exchange, "VALE", 'BUY', -portfolio["VALE"])
