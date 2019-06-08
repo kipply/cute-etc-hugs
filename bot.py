@@ -59,7 +59,7 @@ recent_book = {
 }
 
 trades = []
-ID = 0
+
 positions = {
     "BOND": 0,
     "VALBZ": 0,
@@ -111,14 +111,29 @@ def flip_BOND(exchange):
     print("flipping bond")
     for pair in recent_book['BOND']['sell']:
         if pair[0] < 1000:
-            ID += 1
-            write_to_exchange(exchange, {'type': 'add', 'order_id': ID, 'symbol': 'BOND', 'dir': 'BUY',
+            write_to_exchange(exchange, {'type': 'add', 'order_id': ID(), 'symbol': 'BOND', 'dir': 'BUY',
                                          'price': pair[0], 'size': pair[1]})
+            trades.append({
+                    'symbol': 'BOND', 
+                    'price': pair[0], 
+                    'size': pair[1],
+                    'status': 'SENT',
+                    'dir': 'BUY',
+                    'fills': []
+                })
     for pair in recent_book['BOND']['buy']:
         if pair[0] > 1000:
-            ID += 1
-            write_to_exchange(exchange, {'type': 'add', 'order_id': ID, 'symbol': 'BOND', 'dir': 'SELL',
+            write_to_exchange(exchange, {'type': 'add', 'order_id': ID(), 'symbol': 'BOND', 'dir': 'SELL',
                                          'price': pair[0], 'size': pair[1]})
+            trades.append({
+                    'symbol': 'BOND', 
+                    'price': pair[0], 
+                    'size': pair[1],
+                    'status': 'SENT',
+                    'dir': 'SELL',
+                    'fills': []
+                })
+
 
 if __name__ == "__main__":
     main()
