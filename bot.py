@@ -108,6 +108,8 @@ def main():
     # Since many write messages generate marketdata, this will cause an
     # exponential explosion in pending messages. Please, don't do that!
     print("The exchange replied:", hello_from_exchange, file=sys.stderr)
+    for pair in hello_from_exchange['symbols']:
+        portfolio[pair['symbol']] = pair['position']
 
     while True:
         next_message = read_from_exchange(exchange)
@@ -120,7 +122,7 @@ def main():
             if next_message['symbol'] == "BOND":
                 flip_BOND(exchange)
         elif next_message['type'] == "ack":
-            print("BEFORE ACK: Offering[BOND]:", offering['BOND'])
+            # print("BEFORE ACK: Offering[BOND]:", offering['BOND'])
             offer = trades[next_message['order_id']]
             offer['status'] = "ACK"
             offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
@@ -147,7 +149,7 @@ def main():
             offer = trades[next_message['order_id']]
             offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
             print("Rejected:", offer['dir'], offer['price'], offer['size'], "Reason:", next_message['error'])
-            print("AFTER Reject: Offering:", offering['BOND'])
+            # print("AFTER Reject: Offering:", offering['BOND'])
         elif next_message['type'] == "error":
             print("Trade error!")
         elif next_message['type'] == "trade":
@@ -178,16 +180,16 @@ def main():
         #
         # TODO: Handle server dying and restart
 
-        if offering['BOND']['SELL'] + offering['BOND']['PENDING_SELL'] < 90 + portfolio['BOND']:
+        if offering['BOND']['SELL'] + offering['BOND']['PENDING_SELL'] < 100 + portfolio['BOND']:
             print("(FS) Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
-            sell(exchange, "BOND", 1001, 90 + portfolio['BOND'] -
+            sell(exchange, "BOND", 1001, 100 + portfolio['BOND'] -
                  offering['BOND']['SELL'] - offering['BOND']['PENDING_SELL'])
-            print("AFTER FS Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
-        if offering['BOND']['BUY'] + offering['BOND']['PENDING_BUY'] < 90 - portfolio['BOND']:
+            # print("AFTER FS Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
+        if offering['BOND']['BUY'] + offering['BOND']['PENDING_BUY'] < 100 - portfolio['BOND']:
             print("(FB) Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
-            buy(exchange, "BOND", 999, 90 - portfolio['BOND'] -
+            buy(exchange, "BOND", 999, 100 - portfolio['BOND'] -
                 offering['BOND']['BUY'] - offering['BOND']['PENDING_BUY'])
-            print("AFTER FB Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
+            # print("AFTER FB Portfolio:", portfolio["BOND"], "Offering:", offering['BOND'])
 
         # TODO: Handle server dying and restart
 
