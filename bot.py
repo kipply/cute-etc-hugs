@@ -135,25 +135,25 @@ def main():
                 flip_BOND(exchange)
             if next_message['symbol'] == "VALBZ" or next_message['symbol'] == "VALE":
                 adrArbitrage(exchange)
-                #close position
-                # oben = portfolio["VALE"] + portfolio["VALBZ"]
-                # if(oben > 0):
-                #     try:
-                #         if(maxSellVA("VALBZ") > 0):
-                #             sell(exchange, "VALBZ", recent_book["VALBZ"]['buy'][0][0], min(maxSellVA('VALBZ'),oben))
-                #         if portfolio["VALE"] > 8:
-                #             convert(exchange, "VALE", 'SELL', 12)
-                #     except:
-                #         pass
-                # if(oben < 0):
-                #     try:
-                #         if(maxBuyVA("VALBZ") > 0):
-                #             buy(exchange, "VALBZ", recent_book["VALBZ"]['sell'][0][0], min(maxBuyVA('VALBZ'),-oben))
-                #         if portfolio["VALE"] < -8:
-                #             print ("REEEEEEEEE!")
-                #             convert(exchange, "VALE", 'BUY', 12)
-                #     except:
-                #         pass
+                close position
+                oben = portfolio["VALE"] + portfolio["VALBZ"]
+                if(oben > 0):
+                    try:
+                        if(maxSellVA("VALBZ") > 0):
+                            sell(exchange, "VALBZ", recent_book["VALBZ"]['buy'][0][0], min(maxSellVA('VALBZ'),oben))
+                        if portfolio["VALE"] > 8:
+                            convert(exchange, "VALE", 'SELL', 12)
+                    except:
+                        pass
+                if(oben < 0):
+                    try:
+                        if(maxBuyVA("VALBZ") > 0):
+                            buy(exchange, "VALBZ", recent_book["VALBZ"]['sell'][0][0], min(maxBuyVA('VALBZ'),-oben))
+                        if portfolio["VALE"] < -8:
+                            print ("REEEEEEEEE!")
+                            convert(exchange, "VALE", 'BUY', 12)
+                    except:
+                        pass
             if next_message['symbol'] == "VALBZ":
                 for id, trad in enumerate(trades):
                     if trad['symbol'] == "VALE" and trad['status'] == "ACK":
