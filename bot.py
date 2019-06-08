@@ -234,7 +234,7 @@ def etf_arbitrage(exchange):
       xlf_sell_estimate += share[0] * share[1]
       temp += share[1]
       count += 1
-      if count >= 3:
+      if count >= 2:
         break
     volume  = min(temp, 10)
     xlf_sell_estimate /= float(temp)
@@ -244,7 +244,7 @@ def etf_arbitrage(exchange):
       est_bond += share[0] * share[1]
       temp += share[1]
       count += 1
-      if count >= 3:
+      if count >= 2:
         break
     est_bond /= float(temp)
 
@@ -253,7 +253,7 @@ def etf_arbitrage(exchange):
       est_gs += share[0] * share[1]
       temp += share[1]
       count += 1
-      if count >= 3:
+      if count >= 2:
         break
     est_gs /= float(temp)
 
@@ -262,7 +262,7 @@ def etf_arbitrage(exchange):
       est_ms += share[0] * share[1]
       temp += share[1]
       count += 1
-      if count >= 3:
+      if count >= 2:
         break
     est_ms /= float(temp)
 
@@ -271,7 +271,7 @@ def etf_arbitrage(exchange):
       est_wfc += share[0] * share[1]
       temp += share[1]
       count += 1
-      if count >= 3:
+      if count >= 2:
         break
     est_wfc /= float(temp)
 
