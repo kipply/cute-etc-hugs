@@ -240,7 +240,7 @@ def etf_arbitrage(exchange):
     xlf_sell_estimate /= float(temp)
 
     est_bond = temp = count = 0
-    for share in recent_book['BOND']['sell']:
+    for share in recent_book['BOND']['buy']:
       est_bond += share[0] * share[1]
       temp += share[1]
       count += 1
@@ -249,7 +249,7 @@ def etf_arbitrage(exchange):
     est_bond /= float(temp)
 
     est_gs = temp = count = 0
-    for share in recent_book['GS']['sell']:
+    for share in recent_book['GS']['buy']:
       est_gs += share[0] * share[1]
       temp += share[1]
       count += 1
@@ -258,7 +258,7 @@ def etf_arbitrage(exchange):
     est_gs /= float(temp)
 
     est_ms = temp = count = 0
-    for share in recent_book['MS']['sell']:
+    for share in recent_book['MS']['buy']:
       est_ms += share[0] * share[1]
       temp += share[1]
       count += 1
@@ -267,7 +267,7 @@ def etf_arbitrage(exchange):
     est_ms /= float(temp)
 
     est_wfc = temp = count = 0
-    for share in recent_book['WFC']['sell']:
+    for share in recent_book['WFC']['buy']:
       est_wfc += share[0] * share[1]
       temp += share[1]
       count += 1
