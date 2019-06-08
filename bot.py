@@ -231,7 +231,8 @@ def main():
             print(bcolors.WARNING + "OUT" + bcolors.ENDC)
             if(next_message['order_id'] not in filledID):
                 offer = trades[next_message['order_id']]
-                offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
+                if(offer['type'] == "trade"):
+                    offering[offer['symbol']]['PENDING_' + offer['dir']] -= offer['size']
         elif next_message['type'] == "reject":
             print(trades[next_message['order_id']])
             print(next_message)
